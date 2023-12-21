@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project_ecommerce/components/theme.dart';
 import 'package:project_ecommerce/functions/firebase_options.dart';
 import 'package:project_ecommerce/routes/route.dart';
 
@@ -20,8 +21,25 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        // colorScheme: ColorScheme(
+        //   brightness: Brightness.light,
+        //   primary: blue,
+        //   onPrimary: blue,
+        //   secondary: textGrey,
+        //   onSecondary: bgGrey,
+        //   error: red,
+        //   onError: red,
+        //   background: blue,
+        //   onBackground: blue,
+        //   surface: black,
+        //   onSurface: black,
+        // ),
+        scaffoldBackgroundColor: white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: white,
+          elevation: 0,
+        ),
       ),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,

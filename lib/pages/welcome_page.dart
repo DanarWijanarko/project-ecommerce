@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/functions/theme.dart';
+import 'package:project_ecommerce/components/_components.dart';
 
 class MyWelcomePage extends StatelessWidget {
   const MyWelcomePage({super.key});
@@ -16,18 +16,32 @@ class MyWelcomePage extends StatelessWidget {
           right: 25,
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Text(""),
-            Image.asset("assets/images/welcome.png"),
-            const Text(
-              "GadgetApp",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 45,
-                fontWeight: FontWeight.w800,
-              ),
+            const SizedBox(height: 0),
+            Column(
+              children: [
+                Text(
+                  "Hello, Welcome to",
+                  style: TextStyle(
+                    color: blue,
+                    fontSize: 23,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  "GadgetApp",
+                  style: TextStyle(
+                    color: black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
             ),
+            const SizedBox(height: 0),
+            Image.asset("assets/images/welcome.png"),
+            const SizedBox(height: 0),
             Column(
               children: [
                 SizedBox(
@@ -45,7 +59,7 @@ class MyWelcomePage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 13),
                     ),
                     child: Text(
-                      "Login",
+                      "Sign In",
                       style: TextStyle(
                         color: white,
                         fontSize: 20,
