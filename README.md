@@ -1,10 +1,12 @@
 # Ecommerce
 
-A new Flutter project.
+Flutter with Firebase project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Because Using Firebase you must create directory /firebase in your lib folder
+and put your 'firebase_options.dart' in there. Example:
+![Alt text](readMe.png)
 
 A few resources to get you started if this is your first Flutter project:
 
