@@ -16,11 +16,14 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) => const MyRegisterPage(),
         );
+      case '/dashboard-admin':
+        return MaterialPageRoute(
+          builder: (context) => const MyDashboard(),
+        );
       case '/home-page':
         return MaterialPageRoute(
           builder: (context) => const MyHomePage(),
         );
-
       default:
         return routeError();
     }

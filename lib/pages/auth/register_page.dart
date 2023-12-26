@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/functions/function.dart';
 
 class MyRegisterPage extends StatefulWidget {
   const MyRegisterPage({super.key});
@@ -9,32 +12,30 @@ class MyRegisterPage extends StatefulWidget {
 }
 
 class _MyRegisterPageState extends State<MyRegisterPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  void handlePressedSignUpBtn() async {
+    if (passwordController.text == confirmPasswordController.text) {
+      final result = await AuthServices().signup(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      AuthServices.handleSignUpResult(result, context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password & Confirm Password do not match!'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 45,
-        flexibleSpace: SafeArea(
-          child: Row(
-            children: [
-              const SizedBox(width: 21),
-              MyButtonCustom(
-                onPressed: () => Navigator.pop(context),
-                bgColor: white,
-                bgRadius: 50,
-                onTapColor: blue,
-                onTapRadius: 50,
-                padding: const EdgeInsets.all(4),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: textGrey,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: const AuthAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 25, right: 25),
         child: Column(
@@ -59,23 +60,30 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               ),
             ),
             const SizedBox(height: 22.5),
-            const MyAuthTextField(
+            MyAuthTextField(
+              controller: emailController,
               labelText: "Email",
               icon: Icons.person,
             ),
             const SizedBox(height: 15),
-            const MyAuthTextField(
+            MyAuthTextField(
+              controller: passwordController,
               labelText: "Password",
               icon: Icons.lock,
+              obscureText: true,
+              isPassword: true,
             ),
             const SizedBox(height: 15),
-            const MyAuthTextField(
+            MyAuthTextField(
+              controller: confirmPasswordController,
               labelText: "Confirm Password",
               icon: Icons.lock_reset,
+              obscureText: true,
+              isPassword: true,
             ),
             const SizedBox(height: 22.5),
             MyButtonCustom(
-              onPressed: () {},
+              onPressed: handlePressedSignUpBtn,
               bgColor: blue,
               bgRadius: 10,
               onTapColor: textGrey,
@@ -114,11 +122,14 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                       context,
                       "/login-page",
                     ),
-                    bgColor: white,
+                    bgColor: Colors.transparent,
                     bgRadius: 15,
                     onTapColor: blue,
                     onTapRadius: 15,
-                    padding: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 1,
+                    ),
                     child: Text(
                       "Sign In",
                       style: TextStyle(

@@ -7,7 +7,7 @@ import 'package:project_ecommerce/routes/route.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.android,
   );
   runApp(const MyApp());
 }
@@ -22,19 +22,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        // colorScheme: ColorScheme(
-        //   brightness: Brightness.light,
-        //   primary: blue,
-        //   onPrimary: blue,
-        //   secondary: textGrey,
-        //   onSecondary: bgGrey,
-        //   error: red,
-        //   onError: red,
-        //   background: blue,
-        //   onBackground: blue,
-        //   surface: black,
-        //   onSurface: black,
-        // ),
         scaffoldBackgroundColor: white,
         appBarTheme: AppBarTheme(
           backgroundColor: white,

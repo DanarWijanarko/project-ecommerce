@@ -1,6 +1,8 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/functions/function.dart';
 
 class MyLoginPage extends StatefulWidget {
   const MyLoginPage({super.key});
@@ -10,32 +12,50 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
+  bool isChecked = false;
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void handlePressedSignInBtn() async {
+    final result = await AuthServices().signin(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    AuthServices.handleSignInResult(result, context);
+  }
+
+  void handlePressedResetPassword() async {
+    if (emailController.text != '') {
+      final result = await AuthServices().resetPassword(
+        emailController.text,
+      );
+      AuthServices.handleResetPasswordResult(
+        result,
+        emailController.text,
+        context,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please enter the email you want to change the password!',
+          ),
+        ),
+      );
+    }
+  }
+
+  void handleRememberMe(value) async {
+    setState(() {
+      isChecked = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 45,
-        flexibleSpace: SafeArea(
-          child: Row(
-            children: [
-              const SizedBox(width: 21),
-              MyButtonCustom(
-                onPressed: () => Navigator.pop(context),
-                bgColor: white,
-                bgRadius: 50,
-                onTapColor: blue,
-                onTapRadius: 50,
-                padding: const EdgeInsets.all(4),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: textGrey,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: const AuthAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 25, right: 25),
         child: Column(
@@ -51,7 +71,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
             ),
             const SizedBox(height: 18),
             Container(
-              height: 340,
+              height: 330,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/images/login.png"),
@@ -59,19 +79,65 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 40),
-            const MyAuthTextField(
+            const SizedBox(height: 35),
+            MyAuthTextField(
+              controller: emailController,
               labelText: "Email",
               icon: Icons.person,
             ),
             const SizedBox(height: 30),
-            const MyAuthTextField(
+            MyAuthTextField(
+              controller: passwordController,
               labelText: "Password",
               icon: Icons.lock,
+              obscureText: true,
+              isPassword: true,
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Checkbox(
+                      value: isChecked,
+                      activeColor: blue,
+                      side: BorderSide(width: 1.5, color: textGrey),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      focusColor: textGrey,
+                      splashRadius: 5,
+                      visualDensity: VisualDensity.compact,
+                      onChanged: handleRememberMe,
+                    ),
+                    Text(
+                      "Remember Me",
+                      style: TextStyle(
+                        color: textGrey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                MyButtonCustom(
+                  onPressed: handlePressedResetPassword,
+                  bgColor: Colors.transparent,
+                  bgRadius: 3,
+                  onTapColor: textGrey,
+                  onTapRadius: 3,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                  child: Text(
+                    "Forgot Password?",
+                    style: TextStyle(
+                      color: blue,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 25),
             MyButtonCustom(
-              onPressed: () {},
+              onPressed: handlePressedSignInBtn,
               bgColor: blue,
               bgRadius: 20,
               onTapColor: textGrey,
@@ -89,7 +155,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 35),
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Row(
@@ -110,11 +176,14 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       context,
                       "/register-page",
                     ),
-                    bgColor: white,
+                    bgColor: Colors.transparent,
                     bgRadius: 15,
                     onTapColor: blue,
                     onTapRadius: 15,
-                    padding: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 1,
+                    ),
                     child: Text(
                       "Sign Up",
                       style: TextStyle(

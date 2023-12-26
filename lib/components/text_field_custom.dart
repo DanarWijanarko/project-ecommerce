@@ -90,30 +90,62 @@ class MyTextFieldCustom extends StatelessWidget {
   }
 }
 
-class MyAuthTextField extends StatelessWidget {
-  const MyAuthTextField({
+class MyAuthTextField extends StatefulWidget {
+  MyAuthTextField({
     super.key,
     required this.labelText,
     required this.icon,
     this.controller,
+    this.obscureText = false,
+    this.isPassword = false,
   });
 
   final String labelText;
   final IconData icon;
   final TextEditingController? controller;
+  final bool isPassword;
+  bool obscureText;
 
+  @override
+  State<MyAuthTextField> createState() => _MyAuthTextFieldState();
+}
+
+class _MyAuthTextFieldState extends State<MyAuthTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: controller,
-      obscureText: false,
+      controller: widget.controller,
+      obscureText: widget.obscureText,
       decoration: InputDecoration(
-        labelText: labelText,
+        labelText: widget.labelText,
         prefixIcon: Icon(
-          icon,
+          widget.icon,
           size: 31,
           color: textGrey.withAlpha(150),
         ),
+        suffixIcon: (widget.isPassword)
+            ? MyButtonCustom(
+                onPressed: () {
+                  setState(() {
+                    widget.obscureText = !widget.obscureText;
+                  });
+                },
+                bgColor: Colors.transparent,
+                bgRadius: 50,
+                onTapColor: blue,
+                onTapRadius: 50,
+                padding: const EdgeInsets.all(0),
+                width: 30,
+                height: 30,
+                child: Icon(
+                  (widget.obscureText)
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                  color: textGrey,
+                  size: 20,
+                ),
+              )
+            : null,
         labelStyle: TextStyle(
           color: textGrey.withAlpha(150),
           fontWeight: FontWeight.w500,
