@@ -132,7 +132,7 @@ class _MyAuthTextFieldState extends State<MyAuthTextField> {
                 },
                 bgColor: Colors.transparent,
                 bgRadius: 50,
-                onTapColor: blue,
+                onTapColor: bgActiveNavbar,
                 onTapRadius: 50,
                 padding: const EdgeInsets.all(0),
                 width: 30,
@@ -152,15 +152,15 @@ class _MyAuthTextFieldState extends State<MyAuthTextField> {
           letterSpacing: 1,
         ),
         border: OutlineInputBorder(
-          borderSide: BorderSide(color: blue, width: 2.0),
+          borderSide: BorderSide(color: textGrey, width: 2.0),
           borderRadius: BorderRadius.circular(13),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: blue, width: 1.0),
+          borderSide: BorderSide(color: textGrey, width: 1.0),
           borderRadius: BorderRadius.circular(13),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: blue, width: 2.2),
+          borderSide: BorderSide(color: black, width: 1.7),
           borderRadius: BorderRadius.circular(13),
         ),
       ),

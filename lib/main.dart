@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/components/theme.dart';
-import 'package:project_ecommerce/functions/firebase_options.dart';
+import 'package:project_ecommerce/firebase/firebase_options.dart';
 import 'package:project_ecommerce/routes/route.dart';
 
 void main() async {
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: white,
+        fontFamily: 'Poppins',
         appBarTheme: AppBarTheme(
           backgroundColor: white,
           elevation: 0,

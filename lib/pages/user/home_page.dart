@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/functions/function.dart';
+import 'package:project_ecommerce/functions/_functions.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});

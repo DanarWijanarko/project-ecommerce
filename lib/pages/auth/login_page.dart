@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/components/_components.dart';
-import 'package:project_ecommerce/functions/function.dart';
+import 'package:project_ecommerce/functions/_functions.dart';
 
 class MyLoginPage extends StatefulWidget {
   const MyLoginPage({super.key});
@@ -60,6 +60,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
         padding: const EdgeInsets.only(left: 25, right: 25),
         child: Column(
           children: [
+            // Text Sign In
             Text(
               "Sign In",
               style: TextStyle(
@@ -69,7 +70,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 letterSpacing: 1,
               ),
             ),
+
             const SizedBox(height: 18),
+
+            // Image Container
             Container(
               height: 330,
               decoration: const BoxDecoration(
@@ -79,13 +83,19 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 ),
               ),
             ),
+            
             const SizedBox(height: 35),
+
+            // Text Field Email
             MyAuthTextField(
               controller: emailController,
               labelText: "Email",
               icon: Icons.person,
             ),
+
             const SizedBox(height: 30),
+
+            // Text Field Password
             MyAuthTextField(
               controller: passwordController,
               labelText: "Password",
@@ -93,7 +103,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
               obscureText: true,
               isPassword: true,
             ),
+
             const SizedBox(height: 10),
+
+            // Remember Me & Forgot Password
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -101,7 +114,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   children: [
                     Checkbox(
                       value: isChecked,
-                      activeColor: blue,
+                      activeColor: black,
                       side: BorderSide(width: 1.5, color: textGrey),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       focusColor: textGrey,
@@ -122,23 +135,26 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   onPressed: handlePressedResetPassword,
                   bgColor: Colors.transparent,
                   bgRadius: 3,
-                  onTapColor: textGrey,
+                  onTapColor: bgGrey,
                   onTapRadius: 3,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                   child: Text(
                     "Forgot Password?",
                     style: TextStyle(
-                      color: blue,
+                      color: textGrey,
                     ),
                   ),
                 ),
               ],
             ),
+            
             const SizedBox(height: 25),
+
+            // Button Sign In
             MyButtonCustom(
               onPressed: handlePressedSignInBtn,
-              bgColor: blue,
+              bgColor: black,
               bgRadius: 20,
               onTapColor: textGrey,
               onTapRadius: 20,
@@ -155,7 +171,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 ),
               ),
             ),
+
             const SizedBox(height: 35),
+
+            // Don't have an account?
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Row(

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/components/_components.dart';
-import 'package:project_ecommerce/functions/function.dart';
+import 'package:project_ecommerce/functions/_functions.dart';
 
 class MyRegisterPage extends StatefulWidget {
   const MyRegisterPage({super.key});
@@ -40,6 +40,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
         padding: const EdgeInsets.only(left: 25, right: 25),
         child: Column(
           children: [
+            // Text Sign Up
             Text(
               "Sign Up",
               style: TextStyle(
@@ -49,9 +50,12 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                 letterSpacing: 1,
               ),
             ),
+
             const SizedBox(height: 18),
+
+            // Image Container
             Container(
-              height: 340,
+              height: 320,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/images/register.png"),
@@ -59,13 +63,19 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 22.5),
+
+            const SizedBox(height: 25),
+
+            // Text Field Email
             MyAuthTextField(
               controller: emailController,
               labelText: "Email",
               icon: Icons.person,
             ),
-            const SizedBox(height: 15),
+
+            const SizedBox(height: 21),
+
+            // Text Field Password
             MyAuthTextField(
               controller: passwordController,
               labelText: "Password",
@@ -73,7 +83,10 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               obscureText: true,
               isPassword: true,
             ),
-            const SizedBox(height: 15),
+
+            const SizedBox(height: 21),
+
+            // Text Field Confirm Password
             MyAuthTextField(
               controller: confirmPasswordController,
               labelText: "Confirm Password",
@@ -81,10 +94,13 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               obscureText: true,
               isPassword: true,
             ),
-            const SizedBox(height: 22.5),
+
+            const SizedBox(height: 27),
+
+            // Button Sign Up
             MyButtonCustom(
               onPressed: handlePressedSignUpBtn,
-              bgColor: blue,
+              bgColor: black,
               bgRadius: 10,
               onTapColor: textGrey,
               onTapRadius: 10,
@@ -101,7 +117,10 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 25),
+
+            const SizedBox(height: 27),
+
+            // Have an account?
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Row(

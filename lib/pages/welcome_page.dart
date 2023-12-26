@@ -19,12 +19,14 @@ class MyWelcomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             const SizedBox(height: 0),
+
+            // Welcome Text
             Column(
               children: [
                 Text(
                   "Hello, Welcome to",
                   style: TextStyle(
-                    color: blue,
+                    color: textGrey,
                     fontSize: 23,
                     fontWeight: FontWeight.w600,
                   ),
@@ -39,11 +41,17 @@ class MyWelcomePage extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 0),
+
+            // Image Welcome
             Image.asset("assets/images/welcome.png"),
+
             const SizedBox(height: 0),
+
             Column(
               children: [
+                // Button Sign In
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
@@ -52,7 +60,7 @@ class MyWelcomePage extends StatelessWidget {
                       '/login-page',
                     ),
                     style: TextButton.styleFrom(
-                      backgroundColor: blue,
+                      backgroundColor: black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),
@@ -68,7 +76,10 @@ class MyWelcomePage extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 15),
+
+                // Button Sign Up
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
@@ -78,7 +89,7 @@ class MyWelcomePage extends StatelessWidget {
                     ),
                     style: TextButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(color: blue, width: 2.5),
+                        side: BorderSide(color: black, width: 2.5),
                         borderRadius: BorderRadius.circular(25),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 13),
@@ -86,7 +97,7 @@ class MyWelcomePage extends StatelessWidget {
                     child: Text(
                       "Sign Up",
                       style: TextStyle(
-                        color: blue,
+                        color: black,
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
                       ),
