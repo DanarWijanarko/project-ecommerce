@@ -6,6 +6,7 @@ Flutter with Firebase project.
 
 Because Using Firebase you must create directory /firebase in your lib folder
 and put your 'firebase_options.dart' into it. Example:
+
 ![Alt text](readMe.png)
 
 A few resources to get you started if this is your first Flutter project:
