@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/constants/color.dart';
 
 class AuthServices {
   final FirebaseAuth auth = FirebaseAuth.instance;

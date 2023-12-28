@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/constants/color.dart';
 
 class MyTextFieldCustom extends StatelessWidget {
   MyTextFieldCustom({
@@ -59,19 +60,19 @@ class MyTextFieldCustom extends StatelessWidget {
             hintText: hintText,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 15,
-              vertical: 18,
+              vertical: 13,
             ),
             fillColor: Colors.white,
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: blue, width: 2.0),
+              borderSide: BorderSide(color: textGrey, width: 2.0),
               borderRadius: BorderRadius.circular(15),
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: blue, width: 1.0),
+              borderSide: BorderSide(color: textGrey, width: 1.0),
               borderRadius: BorderRadius.circular(15),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: blue, width: 2.0),
+              borderSide: BorderSide(color: textGrey, width: 2.0),
               borderRadius: BorderRadius.circular(15),
             ),
             errorBorder: OutlineInputBorder(

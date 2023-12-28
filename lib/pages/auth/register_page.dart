@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/functions/_functions.dart';
 

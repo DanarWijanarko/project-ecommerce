@@ -20,6 +20,10 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) => const MyDashboard(),
         );
+      case '/add-product-admin':
+        return MaterialPageRoute(
+          builder: (context) => const AddProduct(),
+        );
       case '/home-page':
         return MaterialPageRoute(
           builder: (context) => const MyHomePage(),

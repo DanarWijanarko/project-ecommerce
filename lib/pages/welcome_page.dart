@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/constants/color.dart';
 
 class MyWelcomePage extends StatelessWidget {
   const MyWelcomePage({super.key});
