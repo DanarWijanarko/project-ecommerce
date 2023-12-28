@@ -1,8 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/components/product_view_dasboard.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/functions/firestore_services.dart';
+import 'package:project_ecommerce/models/product_model.dart';
 
 class MyDashboard extends StatefulWidget {
   const MyDashboard({super.key});
@@ -12,14 +14,6 @@ class MyDashboard extends StatefulWidget {
 }
 
 class _MyDashboardState extends State<MyDashboard> {
-  Future getData() async {
-    await FirebaseFirestore.instance.collection("users").get().then((event) {
-      for (var doc in event.docs) {
-        print("${doc.id} => ${doc.data()}");
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,37 +104,46 @@ class _MyDashboardState extends State<MyDashboard> {
               ),
             ),
             Expanded(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream:
-                    FirebaseFirestore.instance.collection('products').snapshots(),
+              child: StreamBuilder<List<Product>>(
+                stream: FirestoreService().readProductData(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                  FirestoreService.handleReadProductDataResult(snapshot);
+                  var products = snapshot.data!;
+                  if (products.isNotEmpty) {
+                    return ListView(
+                      children: products.map((Product product) {
+                        return ProductViewDashboard(
+                          product: product,
+                          deletebtn: () async {
+                            final result =
+                                await FirestoreService().deleteProductData(
+                              product.id,
+                              product.imgName,
+                            );
+
+                            if (result == 'true') {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Sukses Hapus'),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Error DElete: $result'),
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      }).toList(),
+                    );
+                  } else {
+                    return Text(
+                      "No Data Found!",
+                      style: TextStyle(color: black, fontSize: 30),
                     );
                   }
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Text("Error"),
-                    );
-                  }
-                  // olah data
-                  var data = snapshot.data!.docs;
-            
-                  return ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Product Name: ${data[index]['name']}"),
-                            Image.network(data[index]['imgUrl']),
-                          ],
-                        ),
-                      );
-                    },
-                  );
                 },
               ),
             ),

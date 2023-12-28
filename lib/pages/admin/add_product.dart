@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_ecommerce/components/_components.dart';
@@ -40,10 +39,8 @@ class AddProductState extends State<AddProduct> {
   }
 
   void handlePressedAddProductBtn() async {
-    final imgUrl = await StorageServices().uploadImgToStorage(imageFile);
-
-    final product = Product(
-      imgUrl: imgUrl,
+    final result = await FirestoreService().addProductData(
+      imageFile: imageFile,
       name: nameController.text,
       type: typeController.text,
       price: priceController.text,
@@ -52,8 +49,6 @@ class AddProductState extends State<AddProduct> {
       sold: soldController.text,
       description: descriptionController.text,
     );
-
-    final result = await FirestoreService().addData(product.toJson());
 
     FirestoreService.handleAddDataResult(result, context);
   }

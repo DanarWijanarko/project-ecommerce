@@ -6,18 +6,32 @@ import 'package:firebase_storage/firebase_storage.dart';
 class StorageServices {
   final storageRef = FirebaseStorage.instance.ref();
 
-  Future<String> uploadImgToStorage(File? imgFile) async {
+  Future<Map<String, dynamic>> uploadImgToStorage(File? imgFile) async {
     if (imgFile == null) {
-      return 'Image File is empty';
+      return {'error': 'Image File is empty'};
     }
 
     String fileName = p.basename(imgFile.path);
-    final productRef = storageRef.child('/products/$fileName');
+    final productRef = storageRef.child('products/$fileName');
 
     try {
       await productRef.putFile(imgFile);
       String downloadUrl = await productRef.getDownloadURL();
-      return downloadUrl;
+      return {
+        'fileName': fileName,
+        'downloadUrl': downloadUrl,
+      };
+    } on FirebaseException catch (e) {
+      return {'error': e.message.toString()};
+    }
+  }
+
+  Future<String> deleteImgFromStorage(imgName) async {
+    try {
+      final productRef = storageRef.child('products/$imgName');
+
+      await productRef.delete();
+      return 'true';
     } on FirebaseException catch (e) {
       return e.message.toString();
     }
