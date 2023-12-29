@@ -7,4 +7,4 @@ export 'user/bottom_navbar.dart';
 export 'user/home/home_page.dart';
 export 'user/home/product_detail.dart';
 export 'user/cart/cart_page.dart';
-export 'user/settings/setting_page.dart';
+export 'user/profile/profile_page.dart';
