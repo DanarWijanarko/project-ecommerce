@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_ecommerce/components/_components.dart';
-import 'package:project_ecommerce/components/product_view_dasboard.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/functions/auth_services.dart';
 import 'package:project_ecommerce/functions/firestore_services.dart';
 import 'package:project_ecommerce/models/product_model.dart';
 
@@ -28,20 +29,96 @@ class _MyDashboardState extends State<MyDashboard> {
           ),
         ),
         actions: [
-          MyButtonCustom(
-            onPressed: () => Navigator.pushNamed(context, '/add-product-admin'),
-            bgColor: Colors.transparent,
-            bgRadius: 50,
-            onTapColor: textGrey,
-            onTapRadius: 50,
-            padding: const EdgeInsets.all(5),
-            child: Icon(
-              Icons.add,
-              color: black,
-              size: 30,
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return Row(
+                children: [
+                  MyButtonCustom(
+                    onPressed: () {
+                      controller.isOpen
+                          ? controller.close()
+                          : controller.open();
+                    },
+                    bgColor: Colors.transparent,
+                    bgRadius: 50,
+                    onTapColor: textGrey,
+                    onTapRadius: 50,
+                    padding: const EdgeInsets.all(5),
+                    child: Icon(
+                      Icons.menu,
+                      color: black,
+                      size: 30,
+                    ),
+                  ),
+                  const SizedBox(width: 13),
+                ],
+              );
+            },
+            style: MenuStyle(
+              backgroundColor: MaterialStatePropertyAll(bgGrey),
+              minimumSize: const MaterialStatePropertyAll(Size.zero),
+              padding: const MaterialStatePropertyAll(EdgeInsets.all(0)),
+              shadowColor: MaterialStatePropertyAll(black.withOpacity(0.7)),
             ),
+            alignmentOffset: const Offset(-170, 5),
+            menuChildren: [
+              MenuItemButton(
+                style: MenuItemButton.styleFrom(
+                  foregroundColor: textGrey,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 8,
+                  ),
+                  minimumSize: Size.zero,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/add-product-admin');
+                },
+                child: SizedBox(
+                  width: 175,
+                  child: Center(
+                    child: Text(
+                      "Add Product",
+                      style: TextStyle(
+                        color: black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 1.3,
+                color: textGrey,
+              ),
+              MenuItemButton(
+                style: MenuItemButton.styleFrom(
+                  foregroundColor: textGrey,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 8,
+                  ),
+                  minimumSize: Size.zero,
+                ),
+                onPressed: () async {
+                  final result = await AuthServices().signout();
+                  AuthServices.handleSignOutResult(result, context);
+                },
+                child: SizedBox(
+                  width: 175,
+                  child: Center(
+                    child: Text(
+                      "Sign Out",
+                      style: TextStyle(
+                        color: black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12.5),
         ],
       ),
       body: Padding(
@@ -53,48 +130,6 @@ class _MyDashboardState extends State<MyDashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: bgGrey,
-                borderRadius: BorderRadius.circular(45),
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 25),
-                  suffixIcon: Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 15),
-                    child: MyButtonCustom(
-                      onPressed: () {},
-                      bgColor: Colors.transparent,
-                      bgRadius: 50,
-                      onTapColor: textGrey,
-                      onTapRadius: 50,
-                      padding: const EdgeInsets.all(5),
-                      width: 50,
-                      height: 33,
-                      child: SvgPicture.asset(
-                        "assets/icons/search.svg",
-                        colorFilter: ColorFilter.mode(black, BlendMode.srcIn),
-                      ),
-                    ),
-                  ),
-                  hintText: "Search here...",
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 0, color: bgGrey),
-                    borderRadius: BorderRadius.circular(45),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 0, color: bgGrey),
-                    borderRadius: BorderRadius.circular(45),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 0, color: black),
-                    borderRadius: BorderRadius.circular(45),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 25),
             Text(
               "All Products",
               style: TextStyle(
@@ -103,45 +138,46 @@ class _MyDashboardState extends State<MyDashboard> {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            const SizedBox(height: 8),
             Expanded(
               child: StreamBuilder<List<Product>>(
                 stream: FirestoreService().readProductData(),
                 builder: (context, snapshot) {
-                  FirestoreService.handleReadProductDataResult(snapshot);
-                  var products = snapshot.data!;
-                  if (products.isNotEmpty) {
+                  if (snapshot.hasData) {
+                    var products = snapshot.data!;
+                    if (products.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No Data Found!",
+                          style: TextStyle(color: black, fontSize: 20),
+                        ),
+                      );
+                    }
                     return ListView(
                       children: products.map((Product product) {
-                        return ProductViewDashboard(
+                        return ProductView(
+                          isAdmin: true,
                           product: product,
                           deletebtn: () async {
-                            final result =
-                                await FirestoreService().deleteProductData(
-                              product.id,
-                              product.imgName,
-                            );
+                            final confirmDelete = await FirestoreService
+                                .handleConfirmDeleteProduct(context);
 
-                            if (result == 'true') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Sukses Hapus'),
-                                ),
+                            if (confirmDelete) {
+                              final result =
+                                  await FirestoreService().deleteProductData(
+                                product.id,
+                                product.imgName,
                               );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Error DElete: $result'),
-                                ),
-                              );
+                              FirestoreService.handleDeleteProductResult(
+                                  result, context);
                             }
                           },
                         );
                       }).toList(),
                     );
                   } else {
-                    return Text(
-                      "No Data Found!",
-                      style: TextStyle(color: black, fontSize: 30),
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
                   }
                 },

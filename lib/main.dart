@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true,
         scaffoldBackgroundColor: white,
         fontFamily: 'Poppins',
         appBarTheme: AppBarTheme(
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute: '/',
-      onGenerateRoute: RouteGenerator.generateRoute,
+      routes: RouteGenerator.generateRoute(),
     );
   }
 }

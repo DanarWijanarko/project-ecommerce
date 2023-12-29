@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/functions/storage_services.dart';
+import 'package:project_ecommerce/models/cart_model.dart';
 import 'package:project_ecommerce/models/product_model.dart';
 
 class FirestoreService {
@@ -49,6 +50,38 @@ class FirestoreService {
     }
   }
 
+  Future<String?> addToCartData({
+    required String imgName,
+    required String imgUrl,
+    required String name,
+    required String type,
+    required String price,
+    required String discount,
+  }) async {
+    try {
+      final docCart = firestore.collection('carts').doc();
+
+      String docId = docCart.id;
+
+      final cart = Cart(
+        id: docId,
+        imgName: imgName,
+        imgUrl: imgUrl,
+        name: name,
+        type: type,
+        price: price,
+        discount: discount,
+      );
+
+      final cartJson = cart.toJson();
+
+      await docCart.set(cartJson);
+      return 'true';
+    } on FirebaseException catch (e) {
+      return e.message;
+    }
+  }
+
   Stream<List<Product>> readProductData() {
     // untuk membaca collection & snapshots() semua isi dari document
     // dan me-return Json data dan di convert ke product object
@@ -56,6 +89,16 @@ class FirestoreService {
       // untuk membaca isi dari document 'doc.data()' yang bertipe JSON
       // lalu dirubah menjadi Object menggunakan method 'fromJson'
       return snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList();
+    });
+  }
+
+  Stream<List<Cart>> readCartData() {
+    // untuk membaca collection & snapshots() semua isi dari document
+    // dan me-return Json data dan di convert ke product object
+    return firestore.collection('carts').snapshots().map((snapshot) {
+      // untuk membaca isi dari document 'doc.data()' yang bertipe JSON
+      // lalu dirubah menjadi Object menggunakan method 'fromJson'
+      return snapshot.docs.map((doc) => Cart.fromJson(doc.data())).toList();
     });
   }
 
@@ -73,15 +116,58 @@ class FirestoreService {
     }
   }
 
-  static handleReadProductDataResult(snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+  Future<String?> deleteCartData(docId) async {
+    try {
+      final docCart = firestore.collection('carts').doc(docId);
+
+      await docCart.delete();
+
+      return 'true';
+    } on FirebaseException catch (e) {
+      return e.message;
     }
-    if (snapshot.hasError) {
-      return Center(
-        child: Text("Error: ${snapshot.error}"),
+  }
+
+  static Future<bool> handleConfirmDeleteProduct(BuildContext context) async {
+    bool confirmDelete = await showCupertinoModalPopup(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('Confirm Delete'),
+        content: const Text('Data will be lost Forever!'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: blue),
+            ),
+          ),
+          CupertinoDialogAction(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              'OK',
+              style: TextStyle(color: blue),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return confirmDelete;
+  }
+
+  static handleDeleteProductResult(String? result, BuildContext context) {
+    if (result == 'true') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Sukses Hapus'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error DElete: $result'),
+        ),
       );
     }
   }
@@ -95,7 +181,10 @@ class FirestoreService {
           content: const Text('Press OK to back to all products'),
           actions: <CupertinoDialogAction>[
             CupertinoDialogAction(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.popUntil(
+                context,
+                ModalRoute.withName('/dashboard-admin'),
+              ),
               child: Text(
                 'OK',
                 style: TextStyle(color: blue),
@@ -108,6 +197,33 @@ class FirestoreService {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error Adding new product: $result'),
+        ),
+      );
+    }
+  }
+
+  static handleAddToCartResult(String? result, BuildContext context) {
+    if (result == 'true') {
+      showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: const Text('Successfully added product to basket'),
+          content: const Text('Please go to basket to checkout'),
+          actions: <CupertinoDialogAction>[
+            CupertinoDialogAction(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'OK',
+                style: TextStyle(color: black),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $result'),
         ),
       );
     }

@@ -7,8 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/functions/firestore_services.dart';
-import 'package:project_ecommerce/functions/storage_services.dart';
-import 'package:project_ecommerce/models/product_model.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -57,6 +55,19 @@ class AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: MyButtonCustom(
+          onPressed: () => Navigator.pop(context),
+          bgColor: Colors.transparent,
+          bgRadius: 50,
+          onTapColor: textGrey,
+          onTapRadius: 50,
+          padding: const EdgeInsets.all(4),
+          child: Icon(
+            Icons.arrow_back,
+            color: black,
+          ),
+        ),
         title: Text(
           "Add Product",
           style: TextStyle(

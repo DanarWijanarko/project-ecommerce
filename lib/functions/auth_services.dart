@@ -49,7 +49,7 @@ class AuthServices {
     }
   }
 
-  Future<String?> getUserUID() async {
+  Future<String> getUserUID() async {
     try {
       Completer<String> completer = Completer<String>();
       auth.authStateChanges().listen((User? user) {
@@ -62,7 +62,7 @@ class AuthServices {
       String result = await completer.future;
       return result;
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      return e.message.toString();
     }
   }
 
