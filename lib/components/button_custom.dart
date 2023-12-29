@@ -15,15 +15,18 @@ class MyButtonCustom extends StatelessWidget {
     this.onTapPadding = const EdgeInsets.all(0),
     this.width,
     this.height,
+    this.border = false,
+    this.borderColor = Colors.white,
     required this.child,
   });
 
-  final Color onTapColor, bgColor;
+  final Color onTapColor, bgColor, borderColor;
   final VoidCallback onPressed;
   final double onTapRadius, bgRadius;
   final EdgeInsetsGeometry padding, onTapPadding;
   final Widget child;
   double? width, height;
+  final bool border;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +39,12 @@ class MyButtonCustom extends StatelessWidget {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(onTapRadius),
+          side: (border)
+              ? BorderSide(
+                  color: borderColor,
+                  width: 2.5,
+                )
+              : BorderSide.none,
         ),
       ),
       child: Container(
@@ -112,12 +121,13 @@ class MyNavbarButton extends StatelessWidget {
       return TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-            padding: const EdgeInsets.all(5),
-            minimumSize: Size.zero,
-            foregroundColor: textGrey,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(55),
-            )),
+          padding: const EdgeInsets.all(5),
+          minimumSize: Size.zero,
+          foregroundColor: textGrey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(55),
+          ),
+        ),
         child: Icon(
           icon,
           color: black,

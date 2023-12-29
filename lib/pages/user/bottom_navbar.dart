@@ -54,12 +54,12 @@ class _MyBottomNavBarState extends State<MyBottomNavBar> {
               title: [
                 "Home",
                 "Shopping Cart",
-                "Settings",
+                "Profile",
               ][index],
               icon: [
                 Icons.home_filled,
                 Icons.shopping_cart_rounded,
-                Icons.settings,
+                Icons.person_2,
               ][index],
               selectedIndex: selectedIndex,
               index: index,
