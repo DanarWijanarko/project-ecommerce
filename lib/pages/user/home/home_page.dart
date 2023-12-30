@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/constants/color.dart';
-import 'package:project_ecommerce/functions/firestore_services.dart';
 import 'package:project_ecommerce/models/product_model.dart';
+import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/functions/firestore_services.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});

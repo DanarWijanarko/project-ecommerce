@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/constants/color.dart';
-import 'package:project_ecommerce/functions/_functions.dart';
-import 'package:project_ecommerce/functions/firestore_services.dart';
 import 'package:project_ecommerce/models/cart_model.dart';
+import 'package:project_ecommerce/functions/_functions.dart';
+import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/functions/firestore_services.dart';
 
 class MyCartPage extends StatefulWidget {
   const MyCartPage({super.key});
@@ -267,9 +267,7 @@ class _MyCartPageState extends State<MyCartPage> {
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: MyButtonCustom(
-              onPressed: () {
-                
-              },
+              onPressed: () {},
               bgColor: black,
               bgRadius: 10,
               onTapColor: textGrey,

@@ -3,8 +3,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/components/button_custom.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/components/button_custom.dart';
 
 class MyImagePicker extends StatelessWidget {
   MyImagePicker({

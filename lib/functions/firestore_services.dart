@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project_ecommerce/models/_models.dart';
 import 'package:project_ecommerce/constants/color.dart';
-import 'package:project_ecommerce/models/user_model.dart';
-import 'package:project_ecommerce/models/cart_model.dart';
-import 'package:project_ecommerce/models/product_model.dart';
 import 'package:project_ecommerce/functions/storage_services.dart';
 
 class FirestoreService {

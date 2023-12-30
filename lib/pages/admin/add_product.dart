@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/functions/firestore_services.dart';
 
 class AddProduct extends StatefulWidget {

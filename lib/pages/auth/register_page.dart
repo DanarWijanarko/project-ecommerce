@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/components/_components.dart';
-import 'package:project_ecommerce/functions/_functions.dart';
+import 'package:project_ecommerce/functions/auth_services.dart';
 
 class MyRegisterPage extends StatefulWidget {
   const MyRegisterPage({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/components/_components.dart';
-import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/routes/route.dart';
+import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/components/_components.dart';
 
 class MyBottomNavBar extends StatefulWidget {
   const MyBottomNavBar({super.key});

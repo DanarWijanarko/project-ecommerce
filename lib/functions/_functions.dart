@@ -1,7 +1,5 @@
 import 'package:intl/intl.dart';
 
-export 'auth_services.dart';
-
 class CurrencyFormat {
   static String convertToIdr(String number, int decimalDigits) {
     int parseNumber = int.parse(number);

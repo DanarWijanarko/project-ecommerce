@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/constants/color.dart';
-import 'package:project_ecommerce/functions/_functions.dart';
 import 'package:project_ecommerce/models/cart_model.dart';
+import 'package:project_ecommerce/functions/_functions.dart';
+import 'package:project_ecommerce/components/_components.dart';
 
 class CartView extends StatelessWidget {
   CartView({

@@ -1,11 +1,11 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/components/button_custom.dart';
+import 'package:project_ecommerce/pages/_pages.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/functions/_functions.dart';
 import 'package:project_ecommerce/models/product_model.dart';
-import 'package:project_ecommerce/pages/_pages.dart';
+import 'package:project_ecommerce/components/button_custom.dart';
 
 class ProductView extends StatelessWidget {
   ProductView({
