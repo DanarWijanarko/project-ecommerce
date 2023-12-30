@@ -1,15 +1,69 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_ecommerce/constants/color.dart';
-import 'package:project_ecommerce/functions/storage_services.dart';
+import 'package:project_ecommerce/models/user_model.dart';
 import 'package:project_ecommerce/models/cart_model.dart';
 import 'package:project_ecommerce/models/product_model.dart';
+import 'package:project_ecommerce/functions/storage_services.dart';
 
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future<User?> fecthDataFromSpecificDoc(
+    String collectionPath,
+    String? docPath,
+  ) async {
+    final docRef = firestore.collection(collectionPath).doc(docPath);
+    final snapshot = await docRef.get();
+
+    if (snapshot.exists) {
+      return User.fromJson(snapshot.data()!);
+    }
+    return null;
+  }
+
+  Future<bool> getIsAdmin(String? docPath) async {
+    final docRef = firestore.collection('users').doc(docPath);
+    DocumentSnapshot doc = await docRef.get();
+
+    if (doc.exists) {
+      final data = doc.data() as Map<String, dynamic>;
+      return data['isAdmin'];
+    } else {
+      return false;
+    }
+  }
+
+  Future<String?> addUserToFirestore({
+    required String docPath,
+    required String email,
+  }) async {
+    try {
+      final docProduct = firestore.collection('users').doc(docPath);
+
+      final user = User(
+        id: docPath,
+        isAdmin: false,
+        imgName: 'null',
+        imgUrl: 'null',
+        username: 'null',
+        email: email,
+        address: 'null',
+        phone: 'null',
+        birthDate: 'null',
+      );
+
+      final userJson = user.toJson();
+      await docProduct.set(userJson);
+
+      return 'true';
+    } on FirebaseException catch (e) {
+      return e.message;
+    }
+  }
 
   Future<String?> addProductData({
     required File? imageFile,
@@ -22,7 +76,10 @@ class FirestoreService {
     required String description,
   }) async {
     try {
-      final imgResult = await StorageServices().uploadImgToStorage(imageFile);
+      final imgResult = await StorageServices().uploadImgToStorage(
+        'products',
+        imageFile,
+      );
       final docProduct = firestore.collection('products').doc();
 
       String docId = docProduct.id;
@@ -102,9 +159,15 @@ class FirestoreService {
     });
   }
 
+  // Future<String?> updateUser({
+
+  // }) async {
+
+  // }
+
   Future<String?> deleteProductData(docId, imgName) async {
     try {
-      StorageServices().deleteImgFromStorage(imgName);
+      StorageServices().deleteImgFromStorage('products', imgName);
 
       final docProduct = firestore.collection('products').doc(docId);
 

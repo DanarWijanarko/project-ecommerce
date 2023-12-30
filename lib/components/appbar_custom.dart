@@ -11,22 +11,25 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       toolbarHeight: 45,
       flexibleSpace: SafeArea(
-        child: Row(
-          children: [
-            const SizedBox(width: 21),
-            MyButtonCustom(
-              onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
-              bgColor: Colors.transparent,
-              bgRadius: 50,
-              onTapColor: blue,
-              onTapRadius: 50,
-              padding: const EdgeInsets.all(4),
-              child: Icon(
-                Icons.arrow_back,
-                color: textGrey,
+        child: SizedBox(
+          height: 45,
+          child: Row(
+            children: [
+              const SizedBox(width: 21),
+              MyButtonCustom(
+                onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                bgColor: Colors.transparent,
+                bgRadius: 50,
+                onTapColor: blue,
+                onTapRadius: 50,
+                padding: const EdgeInsets.all(4),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: textGrey,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

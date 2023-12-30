@@ -2,10 +2,11 @@
 
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/functions/firestore_services.dart';
 
 class AuthServices {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -15,10 +16,20 @@ class AuthServices {
     required String password,
   }) async {
     try {
-      await auth.createUserWithEmailAndPassword(
+      final userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      final user = userCredential.user;
+
+      String userUid = user?.uid as String;
+      String userEmail = user?.email as String;
+
+      await FirestoreService().addUserToFirestore(
+        docPath: userUid,
+        email: userEmail,
+      );
+
       return 'true';
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -49,20 +60,11 @@ class AuthServices {
     }
   }
 
-  Future<String> getUserUID() async {
-    try {
-      Completer<String> completer = Completer<String>();
-      auth.authStateChanges().listen((User? user) {
-        if (user != null) {
-          completer.complete(user.uid);
-        } else {
-          completer.complete("null");
-        }
-      });
-      String result = await completer.future;
-      return result;
-    } on FirebaseAuthException catch (e) {
-      return e.message.toString();
+  String? getCurrentUserUID() {
+    if (auth.currentUser != null) {
+      return auth.currentUser?.uid;
+    } else {
+      return null;
     }
   }
 
@@ -108,11 +110,11 @@ class AuthServices {
 
   static handleSignInResult(String? result, BuildContext context) async {
     if (result == 'true') {
-      final userUid = await AuthServices().getUserUID();
-      if (userUid == 'ZMfUx9w67eSV4BAltkNZQCHFXZC3') {
+      final userUid = AuthServices().getCurrentUserUID();
+      bool isAdmin = await FirestoreService().getIsAdmin(userUid);
+
+      if (isAdmin) {
         Navigator.pushNamed(context, '/dashboard-admin');
-      } else if (userUid == 'null') {
-        return;
       } else {
         Navigator.pushNamed(context, '/home-page');
       }

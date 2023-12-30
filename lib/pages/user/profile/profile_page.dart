@@ -1,6 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:project_ecommerce/components/button_custom.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/functions/auth_services.dart';
+import 'package:project_ecommerce/components/button_custom.dart';
+import 'package:project_ecommerce/functions/firestore_services.dart';
+import 'package:project_ecommerce/components/profile_information.dart';
 
 class MySettingPage extends StatefulWidget {
   const MySettingPage({super.key});
@@ -18,177 +23,142 @@ class _MySettingPageState extends State<MySettingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Profile Picture Start
-            Container(
-              width: 180,
-              height: 180,
-              margin: const EdgeInsets.only(top: 30, bottom: 25),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(180),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/mouse.png'),
-                  fit: BoxFit.cover,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: black.withOpacity(0.5),
-                    offset: const Offset(1, 2),
-                  )
-                ],
+            FutureBuilder(
+              future: FirestoreService().fecthDataFromSpecificDoc(
+                'users',
+                AuthServices().getCurrentUserUID(),
               ),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final user = snapshot.data;
+                  if (user == null) {
+                    return Center(
+                      child: Text(
+                        "Image is Empty!",
+                        style: TextStyle(color: black, fontSize: 20),
+                      ),
+                    );
+                  }
+                  return Container(
+                    width: 180,
+                    height: 180,
+                    margin: const EdgeInsets.only(top: 25, bottom: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(180),
+                      color: bgGrey,
+                      image: user.imgUrl != 'null'
+                          ? const DecorationImage(
+                              image: AssetImage('assets/images/mouse.png'),
+                              fit: BoxFit.cover,
+                            )
+                          : const DecorationImage(
+                              image:
+                                  AssetImage('assets/images/blank-profile.png'),
+                              fit: BoxFit.cover,
+                            ),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 4,
+                          color: black.withOpacity(0.3),
+                          offset: const Offset(0.5, 1.5),
+                        )
+                      ],
+                    ),
+                  );
+                } else {
+                  return const SizedBox(
+                    height: 180,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+              },
             ),
             // Profile Picture End
 
             // Profile Detail Start
-
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.only(left: 20, right: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey[400]!,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(15),
+            FutureBuilder(
+              future: FirestoreService().fecthDataFromSpecificDoc(
+                'users',
+                AuthServices().getCurrentUserUID(),
               ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.person,
-                          color: black,
-                          size: 30,
-                        ),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final user = snapshot.data;
+                  if (user == null) {
+                    return Center(
+                      child: Text(
+                        "User is Empty!",
+                        style: TextStyle(color: black, fontSize: 20),
                       ),
-                      const SizedBox(width: 15),
-                      Text(
-                        "Danar Wijanarko",
-                        style: TextStyle(
-                          color: black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    );
+                  }
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 20, right: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 25),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey[400]!,
+                        width: 1,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      children: [
+                        MyProfileInformation(
+                          // title: "Danar Wijanarko",
+                          title: user.username == 'null'
+                              ? 'Username not Set'
+                              : user.username,
+                          icon: Icons.person,
                         ),
-                        child: Icon(
-                          Icons.email,
-                          color: black,
-                          size: 28,
+                        const SizedBox(height: 15),
+                        MyProfileInformation(
+                          // title: "danarwijanarko98@gmail.com",
+                          title: user.email == 'null'
+                              ? 'Email not Set'
+                              : user.email,
+                          icon: Icons.email,
                         ),
-                      ),
-                      const SizedBox(width: 15),
-                      Text(
-                        "danarwijanarko98@gmail.com",
-                        style: TextStyle(
-                          color: black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                        const SizedBox(height: 15),
+                        MyProfileInformation(
+                          // title: "Jl. Ahmad Yani Trenggalek",
+                          title: user.address == 'null'
+                              ? 'Address not Set'
+                              : user.address,
+                          icon: Icons.location_on,
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
+                        const SizedBox(height: 15),
+                        MyProfileInformation(
+                          // title: "081337716694",
+                          title: user.phone == 'null'
+                              ? 'Phone not Set'
+                              : user.phone,
+                          icon: Icons.phone,
                         ),
-                        child: Icon(
-                          Icons.location_on,
-                          color: black,
-                          size: 30,
+                        const SizedBox(height: 15),
+                        MyProfileInformation(
+                          // title: "7 September 2002",
+                          title: user.birthDate == 'null'
+                              ? 'Birth Date not Set'
+                              : user.birthDate,
+                          icon: Icons.date_range,
                         ),
-                      ),
-                      const SizedBox(width: 15),
-                      Text(
-                        "Jl. Ahmad Yani Trenggalek",
-                        style: TextStyle(
-                          color: black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.phone,
-                          color: black,
-                          size: 30,
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      Text(
-                        "081337716694",
-                        style: TextStyle(
-                          color: black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.phone,
-                          color: black,
-                          size: 30,
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      Text(
-                        "081337716694",
-                        style: TextStyle(
-                          color: black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return const SizedBox(
+                    height: 362,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+              },
             ),
             // Profile Detail End
 
@@ -226,7 +196,10 @@ class _MySettingPageState extends State<MySettingPage> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: MyButtonCustom(
-                onPressed: () {},
+                onPressed: () async {
+                  final result = await AuthServices().signout();
+                  AuthServices.handleSignOutResult(result, context);
+                },
                 bgColor: Colors.transparent,
                 bgRadius: 15,
                 onTapColor: textGrey,
