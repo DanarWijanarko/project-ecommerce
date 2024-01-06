@@ -169,7 +169,9 @@ class _MyDashboardState extends State<MyDashboard> {
                                 product.imgName,
                               );
                               FirestoreService.handleDeleteProductResult(
-                                  result, context);
+                                result,
+                                context,
+                              );
                             }
                           },
                         );

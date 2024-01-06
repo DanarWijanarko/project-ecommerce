@@ -18,6 +18,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final userId = AuthServices().getCurrentUserUID();
 
+  TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,18 +64,35 @@ class _MyHomePageState extends State<MyHomePage> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final user = snapshot.data!;
-                      return Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: bgGrey,
-                          borderRadius: BorderRadius.circular(55),
-                          image: DecorationImage(
-                            image: NetworkImage(user.imgUrl),
-                            fit: BoxFit.cover,
+                      if (user.imgUrl == 'null') {
+                        return Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: bgGrey,
+                            borderRadius: BorderRadius.circular(55),
+                            image: const DecorationImage(
+                              image: AssetImage(
+                                'assets/images/blank-profile.png',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        return Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: bgGrey,
+                            borderRadius: BorderRadius.circular(55),
+                            image: DecorationImage(
+                              image: NetworkImage(user.imgUrl),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      }
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -118,6 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     borderRadius: BorderRadius.circular(45),
                   ),
                   child: TextField(
+                    controller: searchController,
                     decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 25),

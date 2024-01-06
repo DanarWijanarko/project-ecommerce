@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/functions/_functions.dart';
 import 'package:project_ecommerce/functions/auth_services.dart';
 import 'package:project_ecommerce/components/button_custom.dart';
 import 'package:project_ecommerce/functions/firestore_services.dart';
@@ -15,7 +16,7 @@ class MySettingPage extends StatefulWidget {
 }
 
 class _MySettingPageState extends State<MySettingPage> {
-  void handleSignOutBtn() async {
+  void handleSignOutBtn() async { 
     final result = await AuthServices().signout();
     AuthServices.handleSignOutResult(result, context);
   }
@@ -47,7 +48,7 @@ class _MySettingPageState extends State<MySettingPage> {
                   return Container(
                     width: 180,
                     height: 180,
-                    margin: const EdgeInsets.only(top: 25, bottom: 20),
+                    margin: const EdgeInsets.only(top: 25, bottom: 15),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(180),
                       color: bgGrey,
@@ -114,15 +115,13 @@ class _MySettingPageState extends State<MySettingPage> {
                     child: Column(
                       children: [
                         MyProfileInformation(
-                          // title: "Danar Wijanarko",
                           title: user.username == 'null'
                               ? 'Username not Set'
-                              : user.username,
+                              : user.username.toCapitalized(),
                           icon: Icons.person,
                         ),
                         const SizedBox(height: 15),
                         MyProfileInformation(
-                          // title: "danarwijanarko98@gmail.com",
                           title: user.email == 'null'
                               ? 'Email not Set'
                               : user.email,
@@ -130,7 +129,6 @@ class _MySettingPageState extends State<MySettingPage> {
                         ),
                         const SizedBox(height: 15),
                         MyProfileInformation(
-                          // title: "Jl. Ahmad Yani Trenggalek",
                           title: user.address == 'null'
                               ? 'Address not Set'
                               : user.address,
@@ -138,7 +136,6 @@ class _MySettingPageState extends State<MySettingPage> {
                         ),
                         const SizedBox(height: 15),
                         MyProfileInformation(
-                          // title: "081337716694",
                           title: user.phone == 'null'
                               ? 'Phone not Set'
                               : user.phone,
@@ -146,7 +143,6 @@ class _MySettingPageState extends State<MySettingPage> {
                         ),
                         const SizedBox(height: 15),
                         MyProfileInformation(
-                          // title: "7 September 2002",
                           title: user.birthDate == 'null'
                               ? 'Birth Date not Set'
                               : user.birthDate,
@@ -167,7 +163,7 @@ class _MySettingPageState extends State<MySettingPage> {
             ),
             // Profile Detail End
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             // Edit Profile Button Start
             Padding(

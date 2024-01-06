@@ -11,11 +11,13 @@ class MyImagePicker extends StatelessWidget {
     super.key,
     required this.title,
     required this.imageFile,
+    this.imageExist = 'null',
     required this.pickImage,
   });
 
   String title;
   File? imageFile;
+  String imageExist;
   VoidCallback pickImage;
 
   @override
@@ -44,32 +46,61 @@ class MyImagePicker extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: (imageFile == null)
-              ? MyButtonCustom(
-                  onPressed: pickImage,
-                  bgColor: Colors.transparent,
-                  bgRadius: 20,
-                  onTapColor: textGrey,
-                  onTapRadius: 20,
-                  padding: const EdgeInsets.all(5),
-                  child: SizedBox(
-                    height: 200,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_a_photo,
-                          color: textGrey.withOpacity(0.5),
+              ? (imageExist == 'null')
+                  ? MyButtonCustom(
+                      onPressed: pickImage,
+                      bgColor: Colors.transparent,
+                      bgRadius: 20,
+                      onTapColor: textGrey,
+                      onTapRadius: 20,
+                      padding: const EdgeInsets.all(5),
+                      child: SizedBox(
+                        height: 200,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add_a_photo,
+                              color: textGrey.withOpacity(0.5),
+                            ),
+                            Text(
+                              "Add Picture",
+                              style: TextStyle(
+                                color: textGrey.withOpacity(0.5),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Add Picture",
-                          style: TextStyle(
-                            color: textGrey.withOpacity(0.5),
+                      ),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          image: NetworkImage(imageExist),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          MyButtonCustom(
+                            onPressed: pickImage,
+                            bgColor: Colors.transparent,
+                            bgRadius: 50,
+                            onTapColor: textGrey,
+                            onTapRadius: 55,
+                            padding: const EdgeInsets.all(0),
+                            child: Icon(
+                              Icons.change_circle,
+                              color: black,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
+                        ],
+                      ),
+                    )
               : Container(
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(

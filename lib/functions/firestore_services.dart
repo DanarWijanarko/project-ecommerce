@@ -10,18 +10,18 @@ import 'package:project_ecommerce/functions/storage_services.dart';
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Future<User?> fecthDataFromSpecificDoc(
-  //   String collectionPath,
-  //   String? docPath,
-  // ) async {
-  //   final docRef = firestore.collection(collectionPath).doc(docPath);
-  //   final snapshot = await docRef.get();
+  Future<User?> test(
+    String collectionPath,
+    String? docPath,
+  ) async {
+    final docRef = firestore.collection(collectionPath).doc(docPath);
+    final snapshot = await docRef.get();
 
-  //   if (snapshot.exists) {
-  //     return User.fromJson(snapshot.data()!);
-  //   }
-  //   return null;
-  // }
+    if (snapshot.exists) {
+      return User.fromJson(snapshot.data()!);
+    }
+    return null;
+  }
 
   Stream<User?> fecthDataFromSpecificDoc(
     String collectionPath,
@@ -275,13 +275,29 @@ class FirestoreService {
     if (result == 'true') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Sukses Hapus'),
+          content: Text('Delete Success'),
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error DElete: $result'),
+          content: Text('Error: $result'),
+        ),
+      );
+    }
+  }
+
+  static handleDeleteCartProductResult(String? result, BuildContext context) {
+    if (result == 'true') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Delete Success'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $result'),
         ),
       );
     }

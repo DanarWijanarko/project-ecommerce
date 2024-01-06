@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,11 +18,33 @@ class MyeditProfile extends StatefulWidget {
 
 class _MyeditProfileState extends State<MyeditProfile> {
   File? imageFile;
+  String imgExist = 'null';
+
+  String? docUser = AuthServices().getCurrentUserUID();
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController birthDateController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    handleDefaultDataUser();
+  }
+
+  void handleDefaultDataUser() async {
+    final user = await FirestoreService().test('users', docUser);
+
+    setState(() {
+      imgExist = user?.imgUrl == 'null' ? 'null' : user!.imgUrl;
+      usernameController.text = user?.username == 'null' ? '' : user!.username;
+      addressController.text = user?.address == 'null' ? '' : user!.address;
+      phoneController.text = user?.phone == 'null' ? '' : user!.phone;
+      birthDateController.text =
+          user?.birthDate == 'null' ? '' : user!.birthDate;
+    });
+  }
 
   Future pickImage() async {
     final pickedImage = await ImagePicker().pickImage(
@@ -33,8 +57,6 @@ class _MyeditProfileState extends State<MyeditProfile> {
   }
 
   void handlePressedUpdateBtn() async {
-    String? docUser = AuthServices().getCurrentUserUID();
-
     final result = await FirestoreService().updateUser(
       docUser: docUser!,
       imgFile: imageFile,
@@ -60,6 +82,7 @@ class _MyeditProfileState extends State<MyeditProfile> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        toolbarHeight: 75,
         leading: MyButtonCustom(
           onPressed: () => Navigator.pop(context),
           bgColor: Colors.transparent,
@@ -88,6 +111,7 @@ class _MyeditProfileState extends State<MyeditProfile> {
               MyImagePicker(
                 title: "Profile Picture",
                 imageFile: imageFile,
+                imageExist: imgExist,
                 pickImage: pickImage,
               ),
               const SizedBox(height: 10),

@@ -59,6 +59,17 @@ class _MyCartPageState extends State<MyCartPage> {
     });
   }
 
+  void deleteCardData(String cardId) async {
+    final result = await FirestoreService().deleteCartData(
+      userId,
+      cardId,
+    );
+    FirestoreService.handleDeleteCartProductResult(
+      result,
+      context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +87,7 @@ class _MyCartPageState extends State<MyCartPage> {
         children: [
           // Cart List Product Start
           Container(
-            height: 478,
+            height: 465,
             padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: StreamBuilder<List<Cart>>(
               stream: FirestoreService().readCartData(userId),
@@ -97,17 +108,7 @@ class _MyCartPageState extends State<MyCartPage> {
                     children: List.generate(carts.length, (index) {
                       Cart cart = carts[index];
                       return CartView(
-                        deleteCardData: () async {
-                          final result =
-                              await FirestoreService().deleteCartData(
-                            AuthServices().getCurrentUserUID(),
-                            cart.id,
-                          );
-                          FirestoreService.handleDeleteProductResult(
-                            result,
-                            context,
-                          );
-                        },
+                        deleteCardData: () => deleteCardData(cart.id),
                         cart: cart,
                       );
                     }),
