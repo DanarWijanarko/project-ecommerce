@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/functions/auth_services.dart';
 import 'package:project_ecommerce/models/product_model.dart';
 import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/functions/firestore_services.dart';
@@ -15,6 +16,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final userId = AuthServices().getCurrentUserUID();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,10 +32,11 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Button Start
                 MyButtonCustom(
                   onPressed: () {},
-                  width: 35,
-                  height: 35,
+                  width: 36,
+                  height: 36,
                   bgRadius: 50,
                   onTapColor: textGrey,
                   onTapRadius: 50,
@@ -47,17 +51,37 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 18,
                   ),
                 ),
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: bgGrey,
-                    borderRadius: BorderRadius.circular(55),
-                    image: const DecorationImage(
-                      image: AssetImage("assets/images/profile.png"),
-                    ),
+                // Button End
+
+                // Profile Picture Start
+                StreamBuilder(
+                  stream: FirestoreService().fecthDataFromSpecificDoc(
+                    'users',
+                    userId,
                   ),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final user = snapshot.data!;
+                      return Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: bgGrey,
+                          borderRadius: BorderRadius.circular(55),
+                          image: DecorationImage(
+                            image: NetworkImage(user.imgUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
                 ),
+                // Profile Picture End
               ],
             ),
           ),

@@ -47,7 +47,12 @@ class AuthServices {
       );
       return 'true';
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      // return e.message;
+      if (e.code == 'invalid-credential') {
+        return 'Wrong Username or Password!';
+      } else {
+        return e.code;
+      }
     }
   }
 

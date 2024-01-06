@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:project_ecommerce/functions/auth_services.dart';
+import 'package:project_ecommerce/functions/firestore_services.dart';
 import 'package:project_ecommerce/routes/route.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/firebase/firebase_options.dart';
@@ -9,11 +11,34 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.android,
   );
-  runApp(const MyApp());
+
+  String? userUid = AuthServices().getCurrentUserUID();
+  bool? isAdmin = await FirestoreService().getIsAdmin(userUid);
+
+  runApp(MyApp(isAdmin: isAdmin));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key, required this.isAdmin});
+
+  final bool? isAdmin;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String? routeInit() {
+    if (AuthServices().getCurrentUserUID() == null) {
+      return '/';
+    } else {
+      if (widget.isAdmin!) {
+        return '/dashboard-admin';
+      } else {
+        return '/home-page';
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +53,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      initialRoute: '/',
+      initialRoute: routeInit(),
       routes: RouteGenerator.generateRoute(),
     );
   }

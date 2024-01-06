@@ -10,17 +10,32 @@ import 'package:project_ecommerce/functions/storage_services.dart';
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<User?> fecthDataFromSpecificDoc(
+  // Future<User?> fecthDataFromSpecificDoc(
+  //   String collectionPath,
+  //   String? docPath,
+  // ) async {
+  //   final docRef = firestore.collection(collectionPath).doc(docPath);
+  //   final snapshot = await docRef.get();
+
+  //   if (snapshot.exists) {
+  //     return User.fromJson(snapshot.data()!);
+  //   }
+  //   return null;
+  // }
+
+  Stream<User?> fecthDataFromSpecificDoc(
     String collectionPath,
     String? docPath,
-  ) async {
+  ) {
     final docRef = firestore.collection(collectionPath).doc(docPath);
-    final snapshot = await docRef.get();
 
-    if (snapshot.exists) {
-      return User.fromJson(snapshot.data()!);
-    }
-    return null;
+    return docRef.snapshots().map((snapshot) {
+      if (snapshot.exists) {
+        return User.fromJson(snapshot.data()!);
+      } else {
+        return null;
+      }
+    });
   }
 
   Future<bool> getIsAdmin(String? docPath) async {
@@ -106,6 +121,7 @@ class FirestoreService {
   }
 
   Future<String?> addToCartData({
+    required String? userId,
     required String imgName,
     required String imgUrl,
     required String name,
@@ -114,7 +130,8 @@ class FirestoreService {
     required String discount,
   }) async {
     try {
-      final docCart = firestore.collection('carts').doc();
+      final docCart =
+          firestore.collection('users').doc(userId).collection('carts').doc();
 
       String docId = docCart.id;
 
@@ -147,23 +164,53 @@ class FirestoreService {
     });
   }
 
-  Stream<List<Cart>> readCartData() {
+  Stream<List<Cart>> readCartData(String? userId) {
     // untuk membaca collection & snapshots() semua isi dari document
     // dan me-return Json data dan di convert ke product object
-    return firestore.collection('carts').snapshots().map((snapshot) {
+    return firestore
+        .collection('users')
+        .doc(userId)
+        .collection('carts')
+        .snapshots()
+        .map((snapshot) {
       // untuk membaca isi dari document 'doc.data()' yang bertipe JSON
       // lalu dirubah menjadi Object menggunakan method 'fromJson'
       return snapshot.docs.map((doc) => Cart.fromJson(doc.data())).toList();
     });
   }
 
-  // Future<String?> updateUser({
+  Future<String?> updateUser({
+    required String docUser,
+    required File? imgFile,
+    required String username,
+    required String address,
+    required String phone,
+    required String birthDate,
+  }) async {
+    try {
+      final imgResult = await StorageServices().uploadImgToStorage(
+        'users',
+        imgFile,
+      );
 
-  // }) async {
+      final user = firestore.collection('users').doc(docUser);
 
-  // }
+      user.update({
+        'imgUrl': imgResult['downloadUrl'],
+        'imgName': imgResult['fileName'],
+        'username': username,
+        'address': address,
+        'phone': phone,
+        'birthDate': birthDate,
+      });
 
-  Future<String?> deleteProductData(docId, imgName) async {
+      return 'true';
+    } on FirebaseException catch (e) {
+      return e.message;
+    }
+  }
+
+  Future<String?> deleteProductData(String? docId, String imgName) async {
     try {
       StorageServices().deleteImgFromStorage('products', imgName);
 
@@ -177,9 +224,16 @@ class FirestoreService {
     }
   }
 
-  Future<String?> deleteCartData(docId) async {
+  Future<String?> deleteCartData(
+    String? docUserId,
+    String? docCartId,
+  ) async {
     try {
-      final docCart = firestore.collection('carts').doc(docId);
+      final docCart = firestore
+          .collection('users')
+          .doc(docUserId)
+          .collection('carts')
+          .doc(docCartId);
 
       await docCart.delete();
 

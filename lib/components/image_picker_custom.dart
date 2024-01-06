@@ -34,9 +34,9 @@ class MyImagePicker extends StatelessWidget {
         const SizedBox(height: 6),
         Container(
           width: MediaQuery.of(context).size.width,
-          height: 150,
+          height: 200,
           decoration: BoxDecoration(
-            color: bgGrey,
+            color: white,
             border: Border.all(
               color: textGrey.withOpacity(0.5),
               width: 1.5,
@@ -71,12 +71,31 @@ class MyImagePicker extends StatelessWidget {
                   ),
                 )
               : Container(
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(
                       image: FileImage(File(imageFile!.path)),
                       fit: BoxFit.contain,
                     ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      MyButtonCustom(
+                        onPressed: pickImage,
+                        bgColor: Colors.transparent,
+                        bgRadius: 50,
+                        onTapColor: textGrey,
+                        onTapRadius: 55,
+                        padding: const EdgeInsets.all(0),
+                        child: Icon(
+                          Icons.change_circle,
+                          color: black,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
         ),

@@ -138,10 +138,9 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                   ),
                   const SizedBox(width: 4),
                   MyButtonCustom(
-                    onPressed: () => Navigator.pushNamed(
-                      context,
-                      "/login-page",
-                    ),
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, '/login-page');
+                    },
                     bgColor: Colors.transparent,
                     bgRadius: 15,
                     onTapColor: blue,

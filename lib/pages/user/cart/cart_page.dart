@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/functions/auth_services.dart';
 import 'package:project_ecommerce/models/cart_model.dart';
 import 'package:project_ecommerce/functions/_functions.dart';
 import 'package:project_ecommerce/components/_components.dart';
@@ -19,6 +20,8 @@ class _MyCartPageState extends State<MyCartPage> {
   int discountPrice = 0;
   int shippingPrice = 0;
 
+  String? userId = AuthServices().getCurrentUserUID();
+
   @override
   void initState() {
     super.initState();
@@ -26,7 +29,7 @@ class _MyCartPageState extends State<MyCartPage> {
   }
 
   void handlePricing() {
-    FirestoreService().readCartData().listen((List<Cart> carts) {
+    FirestoreService().readCartData(userId).listen((List<Cart> carts) {
       int resultSubTotal = 0;
       int resultDiscount = 0;
       int resultShipping = 0;
@@ -73,10 +76,10 @@ class _MyCartPageState extends State<MyCartPage> {
         children: [
           // Cart List Product Start
           Container(
-            height: 490,
+            height: 478,
             padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: StreamBuilder<List<Cart>>(
-              stream: FirestoreService().readCartData(),
+              stream: FirestoreService().readCartData(userId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var carts = snapshot.data!;
@@ -97,6 +100,7 @@ class _MyCartPageState extends State<MyCartPage> {
                         deleteCardData: () async {
                           final result =
                               await FirestoreService().deleteCartData(
+                            AuthServices().getCurrentUserUID(),
                             cart.id,
                           );
                           FirestoreService.handleDeleteProductResult(
@@ -159,11 +163,7 @@ class _MyCartPageState extends State<MyCartPage> {
                 ),
                 // Product Subtotal End
 
-                Container(
-                  height: 1,
-                  color: Colors.grey[400],
-                  margin: const EdgeInsets.only(top: 5, bottom: 4),
-                ),
+                const MyDivider(),
 
                 // Product Discount Start
                 Row(
@@ -178,10 +178,15 @@ class _MyCartPageState extends State<MyCartPage> {
                       ),
                     ),
                     Text(
-                      "-${CurrencyFormat.convertToIdr(
-                        discountPrice.toString(),
-                        0,
-                      )}",
+                      (discountPrice == 0)
+                          ? CurrencyFormat.convertToIdr(
+                              discountPrice.toString(),
+                              0,
+                            )
+                          : "-${CurrencyFormat.convertToIdr(
+                              discountPrice.toString(),
+                              0,
+                            )}",
                       style: TextStyle(
                         color: black,
                         fontSize: 16,
@@ -192,11 +197,7 @@ class _MyCartPageState extends State<MyCartPage> {
                 ),
                 // Product Discount End
 
-                Container(
-                  height: 1,
-                  color: Colors.grey[400],
-                  margin: const EdgeInsets.only(top: 5, bottom: 4),
-                ),
+                const MyDivider(),
 
                 // Shipping Price Start
                 Row(
@@ -225,11 +226,7 @@ class _MyCartPageState extends State<MyCartPage> {
                 ),
                 // Shipping Price End
 
-                Container(
-                  height: 1,
-                  color: Colors.grey[400],
-                  margin: const EdgeInsets.only(top: 5, bottom: 4),
-                ),
+                const MyDivider(),
 
                 // Price Total Start
                 Row(

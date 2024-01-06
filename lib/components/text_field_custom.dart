@@ -13,6 +13,8 @@ class MyTextFieldCustom extends StatelessWidget {
     this.hintField = '',
     this.readOnly = false,
     this.validator,
+    this.maxLines = 1,
+    this.keyboardType = TextInputType.text,
   });
 
   TextEditingController? controller;
@@ -21,6 +23,8 @@ class MyTextFieldCustom extends StatelessWidget {
   String hintField;
   bool readOnly;
   String? Function(String?)? validator;
+  int? maxLines;
+  TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +60,8 @@ class MyTextFieldCustom extends StatelessWidget {
           readOnly: readOnly,
           obscureText: false,
           validator: validator,
+          maxLines: maxLines,
+          keyboardType: keyboardType,
           decoration: InputDecoration(
             hintText: hintText,
             contentPadding: const EdgeInsets.symmetric(

@@ -127,6 +127,8 @@ class AddProductState extends State<AddProduct> {
               controller: descriptionController,
               textFieldTitle: "Product Description",
               hintText: "e.g. haloooo",
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
             ),
             const SizedBox(height: 15),
             MyButtonCustom(

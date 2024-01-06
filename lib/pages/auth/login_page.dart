@@ -19,11 +19,21 @@ class _MyLoginPageState extends State<MyLoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   void handlePressedSignInBtn() async {
-    final result = await AuthServices().signin(
-      email: emailController.text,
-      password: passwordController.text,
-    );
-    AuthServices.handleSignInResult(result, context);
+    if (emailController.text != '' || passwordController.text != '') {
+      final result = await AuthServices().signin(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      AuthServices.handleSignInResult(result, context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please enter email and password',
+          ),
+        ),
+      );
+    }
   }
 
   void handlePressedResetPassword() async {
@@ -192,10 +202,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   ),
                   const SizedBox(width: 4),
                   MyButtonCustom(
-                    onPressed: () => Navigator.pushNamed(
-                      context,
-                      "/register-page",
-                    ),
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, '/register-page');
+                    },
                     bgColor: Colors.transparent,
                     bgRadius: 15,
                     onTapColor: blue,

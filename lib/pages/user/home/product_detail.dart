@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_ecommerce/constants/color.dart';
+import 'package:project_ecommerce/functions/auth_services.dart';
 import 'package:project_ecommerce/models/product_model.dart';
 import 'package:project_ecommerce/functions/_functions.dart';
 import 'package:project_ecommerce/components/_components.dart';
@@ -21,6 +22,21 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  String? userId = AuthServices().getCurrentUserUID();
+
+  void handleAddtoCartButton() async {
+    final result = await FirestoreService().addToCartData(
+      userId: userId,
+      imgName: widget.product.imgName,
+      imgUrl: widget.product.imgUrl,
+      name: widget.product.name,
+      type: widget.product.type,
+      price: widget.product.price,
+      discount: widget.product.discount,
+    );
+    FirestoreService.handleAddToCartResult(result, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -362,17 +378,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       onTapRadius: 25,
                       padding: const EdgeInsets.all(0),
                       bgColor: black,
-                      onPressed: () async {
-                        final result = await FirestoreService().addToCartData(
-                          imgName: widget.product.imgName,
-                          imgUrl: widget.product.imgUrl,
-                          name: widget.product.name,
-                          type: widget.product.type,
-                          price: widget.product.price,
-                          discount: widget.product.discount,
-                        );
-                        FirestoreService.handleAddToCartResult(result, context);
-                      },
+                      onPressed: handleAddtoCartButton,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,

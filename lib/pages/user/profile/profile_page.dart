@@ -15,6 +15,11 @@ class MySettingPage extends StatefulWidget {
 }
 
 class _MySettingPageState extends State<MySettingPage> {
+  void handleSignOutBtn() async {
+    final result = await AuthServices().signout();
+    AuthServices.handleSignOutResult(result, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +28,8 @@ class _MySettingPageState extends State<MySettingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Profile Picture Start
-            FutureBuilder(
-              future: FirestoreService().fecthDataFromSpecificDoc(
+            StreamBuilder(
+              stream: FirestoreService().fecthDataFromSpecificDoc(
                 'users',
                 AuthServices().getCurrentUserUID(),
               ),
@@ -34,7 +39,7 @@ class _MySettingPageState extends State<MySettingPage> {
                   if (user == null) {
                     return Center(
                       child: Text(
-                        "Image is Empty!",
+                        "No Data!",
                         style: TextStyle(color: black, fontSize: 20),
                       ),
                     );
@@ -47,8 +52,8 @@ class _MySettingPageState extends State<MySettingPage> {
                       borderRadius: BorderRadius.circular(180),
                       color: bgGrey,
                       image: user.imgUrl != 'null'
-                          ? const DecorationImage(
-                              image: AssetImage('assets/images/mouse.png'),
+                          ? DecorationImage(
+                              image: NetworkImage(user.imgUrl),
                               fit: BoxFit.cover,
                             )
                           : const DecorationImage(
@@ -78,8 +83,8 @@ class _MySettingPageState extends State<MySettingPage> {
             // Profile Picture End
 
             // Profile Detail Start
-            FutureBuilder(
-              future: FirestoreService().fecthDataFromSpecificDoc(
+            StreamBuilder(
+              stream: FirestoreService().fecthDataFromSpecificDoc(
                 'users',
                 AuthServices().getCurrentUserUID(),
               ),
@@ -89,7 +94,7 @@ class _MySettingPageState extends State<MySettingPage> {
                   if (user == null) {
                     return Center(
                       child: Text(
-                        "User is Empty!",
+                        "No Data!",
                         style: TextStyle(color: black, fontSize: 20),
                       ),
                     );
@@ -162,13 +167,15 @@ class _MySettingPageState extends State<MySettingPage> {
             ),
             // Profile Detail End
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 20),
 
             // Edit Profile Button Start
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: MyButtonCustom(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/edit-profile');
+                },
                 bgColor: black,
                 bgRadius: 15,
                 onTapColor: textGrey,
@@ -196,10 +203,7 @@ class _MySettingPageState extends State<MySettingPage> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: MyButtonCustom(
-                onPressed: () async {
-                  final result = await AuthServices().signout();
-                  AuthServices.handleSignOutResult(result, context);
-                },
+                onPressed: handleSignOutBtn,
                 bgColor: Colors.transparent,
                 bgRadius: 15,
                 onTapColor: textGrey,

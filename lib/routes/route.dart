@@ -10,6 +10,7 @@ class RouteGenerator {
       '/dashboard-admin': (context) => const MyDashboard(),
       '/add-product-admin': (context) => const AddProduct(),
       '/home-page': (context) => const MyBottomNavBar(),
+      '/edit-profile': (context) => const MyeditProfile(),
     };
   }
 
