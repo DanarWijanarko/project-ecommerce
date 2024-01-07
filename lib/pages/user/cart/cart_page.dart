@@ -7,6 +7,7 @@ import 'package:project_ecommerce/models/cart_model.dart';
 import 'package:project_ecommerce/functions/_functions.dart';
 import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/functions/firestore_services.dart';
+import 'package:project_ecommerce/models/user_model.dart';
 
 class MyCartPage extends StatefulWidget {
   const MyCartPage({super.key});
@@ -59,16 +60,7 @@ class _MyCartPageState extends State<MyCartPage> {
     });
   }
 
-  void deleteCardData(String cardId) async {
-    final result = await FirestoreService().deleteCartData(
-      userId,
-      cardId,
-    );
-    FirestoreService.handleDeleteCartProductResult(
-      result,
-      context,
-    );
-  }
+  void deleteCardData(String cardId) async {}
 
   @override
   Widget build(BuildContext context) {
@@ -93,25 +85,29 @@ class _MyCartPageState extends State<MyCartPage> {
               stream: FirestoreService().readCartData(userId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  var carts = snapshot.data!;
+                  final carts = snapshot.data!;
                   if (carts.isEmpty) {
                     return Center(
                       child: Text(
-                        "Basket is Empty!",
+                        "Cart is Empty!",
                         style: TextStyle(color: black, fontSize: 20),
                       ),
                     );
                   }
-                  return ListView(
-                    primary: false,
-                    shrinkWrap: true,
-                    children: List.generate(carts.length, (index) {
+                  return ListView.builder(
+                    itemCount: carts.length,
+                    itemBuilder: (context, index) {
                       Cart cart = carts[index];
                       return CartView(
-                        deleteCardData: () => deleteCardData(cart.id),
                         cart: cart,
+                        deleteCardData: () async {
+                          await FirestoreService().deleteSpecificCartData(
+                            userId,
+                            cart.id,
+                          );
+                        },
                       );
-                    }),
+                    },
                   );
                 } else {
                   return const Center(
@@ -262,28 +258,99 @@ class _MyCartPageState extends State<MyCartPage> {
           // Price Total End
 
           // Proceed to Checkout Button Start
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-            child: MyButtonCustom(
-              onPressed: () {},
-              bgColor: black,
-              bgRadius: 10,
-              onTapColor: textGrey,
-              onTapRadius: 10,
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.all(9),
-              child: Center(
-                child: Text(
-                  "Proceed to Checkout",
-                  style: TextStyle(
-                    color: white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.5,
+          StreamBuilder(
+            stream: FirestoreService().readCartData(userId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final carts = snapshot.data!;
+                if (carts.isEmpty) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.all(9),
+                    margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Cart is Empty!",
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                List<Map<String, dynamic>> products = [];
+
+                for (int i = 0; i < carts.length; i++) {
+                  final cart = carts[i];
+                  Map<String, dynamic> product = {
+                    'id': cart.id,
+                    'name': cart.name,
+                    'type': cart.type,
+                    'imgUrl': cart.imgUrl,
+                  };
+                  products.add(product);
+                }
+
+                String totalPrice =
+                    (subTotalPrice - discountPrice + shippingPrice).toString();
+
+                return Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                  child: MyButtonCustom(
+                    onPressed: () async {
+                      User? currentUser =
+                          await FirestoreService().getCurrentUserData(userId);
+
+                      final result =
+                          await FirestoreService().addCheckoutProduct(
+                        cusId: userId!,
+                        cusName: currentUser!.username,
+                        cusAddress: currentUser.address,
+                        cusPhone: currentUser.phone,
+                        products: products,
+                        totalPrice: totalPrice,
+                        status: "Success",
+                      );
+
+                      FirestoreService.handleAddCheckoutResult(
+                        result,
+                        context,
+                        userId,
+                      );
+                    },
+                    bgColor: black,
+                    bgRadius: 10,
+                    onTapColor: textGrey,
+                    onTapRadius: 10,
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.all(9),
+                    child: Center(
+                      child: Text(
+                        "Proceed to Checkout",
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           ),
           // Proceed to Checkout Button End
         ],

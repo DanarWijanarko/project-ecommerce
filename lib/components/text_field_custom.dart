@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/components/_components.dart';
 
@@ -169,6 +170,63 @@ class _MyAuthTextFieldState extends State<MyAuthTextField> {
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: black, width: 1.7),
           borderRadius: BorderRadius.circular(13),
+        ),
+      ),
+    );
+  }
+}
+
+class MySearchTextField extends StatelessWidget {
+  MySearchTextField({
+    super.key,
+    required this.searchController,
+    required this.searchButton,
+  });
+
+  VoidCallback searchButton;
+  TextEditingController searchController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: bgGrey,
+        borderRadius: BorderRadius.circular(45),
+      ),
+      child: TextField(
+        controller: searchController,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 25),
+          suffixIcon: Padding(
+            padding: const EdgeInsetsDirectional.only(end: 15),
+            child: MyButtonCustom(
+              onPressed: searchButton,
+              bgColor: Colors.transparent,
+              bgRadius: 50,
+              onTapColor: textGrey,
+              onTapRadius: 50,
+              padding: const EdgeInsets.all(5),
+              width: 50,
+              height: 33,
+              child: SvgPicture.asset(
+                "assets/icons/search.svg",
+                colorFilter: ColorFilter.mode(black, BlendMode.srcIn),
+              ),
+            ),
+          ),
+          hintText: "Search here...",
+          border: OutlineInputBorder(
+            borderSide: BorderSide(width: 0, color: bgGrey),
+            borderRadius: BorderRadius.circular(45),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 0, color: bgGrey),
+            borderRadius: BorderRadius.circular(45),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 0, color: black),
+            borderRadius: BorderRadius.circular(45),
+          ),
         ),
       ),
     );

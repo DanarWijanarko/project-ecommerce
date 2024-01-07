@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,22 +8,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_ecommerce/models/_models.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/functions/storage_services.dart';
+import 'package:project_ecommerce/models/checkout_model.dart';
 
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  Future<User?> test(
-    String collectionPath,
-    String? docPath,
-  ) async {
-    final docRef = firestore.collection(collectionPath).doc(docPath);
-    final snapshot = await docRef.get();
-
-    if (snapshot.exists) {
-      return User.fromJson(snapshot.data()!);
-    }
-    return null;
-  }
 
   Stream<User?> fecthDataFromSpecificDoc(
     String collectionPath,
@@ -38,16 +28,20 @@ class FirestoreService {
     });
   }
 
-  Future<bool> getIsAdmin(String? docPath) async {
+  Future<User?> getCurrentUserData(String? docPath) async {
     final docRef = firestore.collection('users').doc(docPath);
-    DocumentSnapshot doc = await docRef.get();
+    final snapshot = await docRef.get();
 
-    if (doc.exists) {
-      final data = doc.data() as Map<String, dynamic>;
-      return data['isAdmin'];
-    } else {
-      return false;
+    if (snapshot.exists) {
+      return User.fromJson(snapshot.data()!);
     }
+    return null;
+  }
+
+  Future<bool> getIsAdmin(String? docPath) async {
+    User? user = await getCurrentUserData(docPath);
+
+    return user!.isAdmin;
   }
 
   Future<String?> addUserToFirestore({
@@ -154,10 +148,58 @@ class FirestoreService {
     }
   }
 
+  Future<String?> addCheckoutProduct({
+    required String cusId,
+    required String cusName,
+    required String cusAddress,
+    required String cusPhone,
+    required List<Map<String, dynamic>> products,
+    required String status,
+    required String totalPrice,
+  }) async {
+    try {
+      final docCheckout = firestore.collection('checkout').doc();
+
+      String docId = docCheckout.id;
+
+      final checkout = Checkout(
+        cusId: docId,
+        cusName: cusName,
+        cusAddress: cusAddress,
+        cusPhone: cusPhone,
+        products: products,
+        totalPrice: totalPrice,
+        status: status,
+      );
+
+      final checkoutJson = checkout.toJson();
+
+      await docCheckout.set(checkoutJson);
+      return 'true';
+    } on FirebaseException catch (e) {
+      return e.message;
+    }
+  }
+
   Stream<List<Product>> readProductData() {
     // untuk membaca collection & snapshots() semua isi dari document
     // dan me-return Json data dan di convert ke product object
     return firestore.collection('products').snapshots().map((snapshot) {
+      // untuk membaca isi dari document 'doc.data()' yang bertipe JSON
+      // lalu dirubah menjadi Object menggunakan method 'fromJson'
+      return snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList();
+    });
+  }
+
+  Stream<List<Product>> readProductDataByName(String keyword) {
+    // untuk membaca collection & snapshots() semua isi dari document
+    // dan me-return Json data dan di convert ke product object
+    return firestore
+        .collection('products')
+        .where('name', isGreaterThanOrEqualTo: keyword)
+        .where('name', isLessThanOrEqualTo: '$keyword\uf7ff')
+        .snapshots()
+        .map((snapshot) {
       // untuk membaca isi dari document 'doc.data()' yang bertipe JSON
       // lalu dirubah menjadi Object menggunakan method 'fromJson'
       return snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList();
@@ -224,7 +266,7 @@ class FirestoreService {
     }
   }
 
-  Future<String?> deleteCartData(
+  Future<String?> deleteSpecificCartData(
     String? docUserId,
     String? docCartId,
   ) async {
@@ -236,6 +278,23 @@ class FirestoreService {
           .doc(docCartId);
 
       await docCart.delete();
+
+      return 'true';
+    } on FirebaseException catch (e) {
+      return e.message;
+    }
+  }
+
+  Future<String?> deleteAllCartData(String? docUserId) async {
+    try {
+      final docCart =
+          firestore.collection('users').doc(docUserId).collection('carts');
+
+      final snapshot = await docCart.get();
+
+      for (var doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
 
       return 'true';
     } on FirebaseException catch (e) {
@@ -340,6 +399,38 @@ class FirestoreService {
         builder: (BuildContext context) => CupertinoAlertDialog(
           title: const Text('Successfully added product to basket'),
           content: const Text('Please go to basket to checkout'),
+          actions: <CupertinoDialogAction>[
+            CupertinoDialogAction(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'OK',
+                style: TextStyle(color: black),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $result'),
+        ),
+      );
+    }
+  }
+
+  static handleAddCheckoutResult(
+    String? result,
+    BuildContext context,
+    String? userId,
+  ) async {
+    if (result == 'true') {
+      await FirestoreService().deleteAllCartData(userId);
+      showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: const Text('Checkout Success'),
+          content: const Text('Thank you for your Purchase'),
           actions: <CupertinoDialogAction>[
             CupertinoDialogAction(
               onPressed: () => Navigator.pop(context),

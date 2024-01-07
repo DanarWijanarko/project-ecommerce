@@ -7,6 +7,7 @@ import 'package:project_ecommerce/functions/auth_services.dart';
 import 'package:project_ecommerce/components/button_custom.dart';
 import 'package:project_ecommerce/functions/firestore_services.dart';
 import 'package:project_ecommerce/components/profile_information.dart';
+import 'package:project_ecommerce/models/user_model.dart';
 
 class MySettingPage extends StatefulWidget {
   const MySettingPage({super.key});
@@ -16,7 +17,7 @@ class MySettingPage extends StatefulWidget {
 }
 
 class _MySettingPageState extends State<MySettingPage> {
-  void handleSignOutBtn() async { 
+  void handleSignOutBtn() async {
     final result = await AuthServices().signout();
     AuthServices.handleSignOutResult(result, context);
   }
@@ -36,15 +37,7 @@ class _MySettingPageState extends State<MySettingPage> {
               ),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  final user = snapshot.data;
-                  if (user == null) {
-                    return Center(
-                      child: Text(
-                        "No Data!",
-                        style: TextStyle(color: black, fontSize: 20),
-                      ),
-                    );
-                  }
+                  User user = snapshot.data!;
                   return Container(
                     width: 180,
                     height: 180,
@@ -91,15 +84,7 @@ class _MySettingPageState extends State<MySettingPage> {
               ),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  final user = snapshot.data;
-                  if (user == null) {
-                    return Center(
-                      child: Text(
-                        "No Data!",
-                        style: TextStyle(color: black, fontSize: 20),
-                      ),
-                    );
-                  }
+                  User user = snapshot.data!;
                   return Container(
                     width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.only(left: 20, right: 20),

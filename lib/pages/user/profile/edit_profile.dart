@@ -8,6 +8,7 @@ import 'package:project_ecommerce/components/_components.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/functions/auth_services.dart';
 import 'package:project_ecommerce/functions/firestore_services.dart';
+import 'package:project_ecommerce/models/user_model.dart';
 
 class MyeditProfile extends StatefulWidget {
   const MyeditProfile({super.key});
@@ -34,7 +35,7 @@ class _MyeditProfileState extends State<MyeditProfile> {
   }
 
   void handleDefaultDataUser() async {
-    final user = await FirestoreService().test('users', docUser);
+    User? user = await FirestoreService().getCurrentUserData(docUser);
 
     setState(() {
       imgExist = user?.imgUrl == 'null' ? 'null' : user!.imgUrl;

@@ -17,8 +17,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final userId = AuthServices().getCurrentUserUID();
+  String? name;
 
   TextEditingController searchController = TextEditingController();
+
+  void searchButton() {
+    setState(() {
+      name = searchController.text;
+    });
+  }
+
+  Stream<List<Product>> handleSearchingProduct() {
+    if (name == null || name == '') {
+      return FirestoreService().readProductData();
+    } else {
+      return FirestoreService().readProductDataByName(name!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,17 +95,30 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         );
                       } else {
-                        return Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: bgGrey,
-                            borderRadius: BorderRadius.circular(55),
-                            image: DecorationImage(
-                              image: NetworkImage(user.imgUrl),
-                              fit: BoxFit.cover,
+                        return Row(
+                          children: [
+                            Text(
+                              user.username,
+                              style: TextStyle(
+                                color: black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 10),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: bgGrey,
+                                borderRadius: BorderRadius.circular(55),
+                                image: DecorationImage(
+                                  image: NetworkImage(user.imgUrl),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ],
                         );
                       }
                     } else {
@@ -114,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Welcome Text Start
                 Text(
                   "Welcome,",
                   style: TextStyle(
@@ -130,52 +159,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: textGrey,
                   ),
                 ),
+                // Welcome Text End
+
                 const SizedBox(height: 20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: bgGrey,
-                    borderRadius: BorderRadius.circular(45),
-                  ),
-                  child: TextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 25),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 15),
-                        child: MyButtonCustom(
-                          onPressed: () {},
-                          bgColor: Colors.transparent,
-                          bgRadius: 50,
-                          onTapColor: textGrey,
-                          onTapRadius: 50,
-                          padding: const EdgeInsets.all(5),
-                          width: 50,
-                          height: 33,
-                          child: SvgPicture.asset(
-                            "assets/icons/search.svg",
-                            colorFilter:
-                                ColorFilter.mode(black, BlendMode.srcIn),
-                          ),
-                        ),
-                      ),
-                      hintText: "Search here...",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 0, color: bgGrey),
-                        borderRadius: BorderRadius.circular(45),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 0, color: bgGrey),
-                        borderRadius: BorderRadius.circular(45),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 0, color: black),
-                        borderRadius: BorderRadius.circular(45),
-                      ),
-                    ),
-                  ),
+
+                // Search TextField Start
+                MySearchTextField(
+                  searchController: searchController,
+                  searchButton: searchButton,
                 ),
+                // Search TextField End
+
                 const SizedBox(height: 20),
+
+                // New Arrivals Text Start
                 Text(
                   "New Arrivals",
                   style: TextStyle(
@@ -184,6 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontSize: 22,
                   ),
                 ),
+                // New Arrivals Text End
               ],
             ),
             // Text & Search End
@@ -192,10 +190,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
             // Product List Start
             StreamBuilder<List<Product>>(
-              stream: FirestoreService().readProductData(),
+              stream: handleSearchingProduct(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  var products = snapshot.data!;
+                  final products = snapshot.data!;
                   if (products.isEmpty) {
                     return Center(
                       child: Text(
@@ -204,16 +202,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     );
                   }
-                  return ListView(
+                  return ListView.builder(
                     primary: false,
                     shrinkWrap: true,
-                    children: products.map((Product product) {
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      Product product = products[index];
                       return ProductView(
                         isAdmin: false,
                         product: product,
                         deletebtn: () {},
                       );
-                    }).toList(),
+                    },
                   );
                 } else {
                   return const Center(
