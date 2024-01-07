@@ -8,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_ecommerce/models/_models.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/functions/storage_services.dart';
-import 'package:project_ecommerce/models/checkout_model.dart';
 
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -163,7 +162,8 @@ class FirestoreService {
       String docId = docCheckout.id;
 
       final checkout = Checkout(
-        cusId: docId,
+        id: docId,
+        cusId: cusId,
         cusName: cusName,
         cusAddress: cusAddress,
         cusPhone: cusPhone,

@@ -91,6 +91,7 @@ class _MyDashboardState extends State<MyDashboard> {
                 height: 1.3,
                 color: textGrey,
               ),
+              // `
               MenuItemButton(
                 style: MenuItemButton.styleFrom(
                   foregroundColor: textGrey,
@@ -138,7 +139,7 @@ class _MyDashboardState extends State<MyDashboard> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Expanded(
               child: StreamBuilder<List<Product>>(
                 stream: FirestoreService().readProductData(),
@@ -153,8 +154,10 @@ class _MyDashboardState extends State<MyDashboard> {
                         ),
                       );
                     }
-                    return ListView(
-                      children: products.map((Product product) {
+                    return ListView.builder(
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        Product product = products[index];
                         return ProductView(
                           isAdmin: true,
                           product: product,
@@ -175,7 +178,7 @@ class _MyDashboardState extends State<MyDashboard> {
                             }
                           },
                         );
-                      }).toList(),
+                      },
                     );
                   } else {
                     return const Center(

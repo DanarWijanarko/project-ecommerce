@@ -7,16 +7,22 @@ class RouteGenerator {
       '/': (context) => const MyWelcomePage(),
       '/login-page': (context) => const MyLoginPage(),
       '/register-page': (context) => const MyRegisterPage(),
-      '/dashboard-admin': (context) => const MyDashboard(),
+      '/dashboard-admin': (context) => const MyBottomNavbarAdmin(),
       '/add-product-admin': (context) => const AddProduct(),
-      '/home-page': (context) => const MyBottomNavBar(),
+      '/home-page': (context) => const MyBottomNavbarUser(),
       '/edit-profile': (context) => const MyeditProfile(),
     };
   }
 
-  static List pages = [
+  static List pagesUser = [
     const MyHomePage(),
     const MyCartPage(),
-    const MySettingPage(),
+    const MyProfilePageUser(),
+  ];
+
+  static List pagesAdmin = [
+    const MyDashboard(),
+    const MyTransactionPage(),
+    const MyProfilePageAdmin(),
   ];
 }
