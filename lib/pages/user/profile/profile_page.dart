@@ -9,14 +9,14 @@ import 'package:project_ecommerce/functions/firestore_services.dart';
 import 'package:project_ecommerce/components/profile_information.dart';
 import 'package:project_ecommerce/models/user_model.dart';
 
-class MyProfilePageUser extends StatefulWidget {
-  const MyProfilePageUser({super.key});
+class MyProfilePage extends StatefulWidget {
+  const MyProfilePage({super.key});
 
   @override
-  State<MyProfilePageUser> createState() => _MyProfilePageUserState();
+  State<MyProfilePage> createState() => _MyProfilePageState();
 }
 
-class _MyProfilePageUserState extends State<MyProfilePageUser> {
+class _MyProfilePageState extends State<MyProfilePage> {
   void handleSignOutBtn() async {
     final result = await AuthServices().signout();
     AuthServices.handleSignOutResult(result, context);

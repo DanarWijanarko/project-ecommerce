@@ -121,7 +121,7 @@ class _MyBottomNavbarAdminState extends State<MyBottomNavbarAdmin> {
               },
               title: [
                 "Home",
-                "Ongoing",
+                "Order",
                 "Profile",
               ][index],
               icon: [

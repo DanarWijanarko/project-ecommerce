@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/functions/auth_services.dart';
@@ -316,8 +317,9 @@ class _MyCartPageState extends State<MyCartPage> {
                         cusAddress: currentUser.address,
                         cusPhone: currentUser.phone,
                         products: products,
+                        timestamp: Timestamp.now(),
                         totalPrice: totalPrice,
-                        status: "Success",
+                        status: "Processing",
                       );
 
                       FirestoreService.handleAddCheckoutResult(

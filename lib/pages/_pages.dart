@@ -3,7 +3,6 @@ export 'auth/login_page.dart';
 export 'auth/register_page.dart';
 export 'admin/home/dashboard.dart';
 export 'admin/home/add_product.dart';
-export 'admin/profile/profile_page_admin.dart';
 export 'admin/transaction/transaction_page.dart';
 export 'bottom_navbar.dart';
 export 'user/home/home_page.dart';

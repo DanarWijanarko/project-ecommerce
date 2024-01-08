@@ -24,6 +24,16 @@ class DiscountCount {
   }
 }
 
+class Date {
+  static String formatted(timestamp) {
+    DateTime time = DateTime.parse(timestamp);
+
+    String formattedDateTime = DateFormat('dd MMM yyyy').format(time);
+
+    return formattedDateTime;
+  }
+}
+
 extension StringCasingExtension on String {
   String toCapitalized() =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';

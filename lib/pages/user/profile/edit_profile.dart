@@ -20,6 +20,7 @@ class MyeditProfile extends StatefulWidget {
 class _MyeditProfileState extends State<MyeditProfile> {
   File? imageFile;
   String imgExist = 'null';
+  String imgName = 'null';
 
   String? docUser = AuthServices().getCurrentUserUID();
 
@@ -39,6 +40,7 @@ class _MyeditProfileState extends State<MyeditProfile> {
 
     setState(() {
       imgExist = user?.imgUrl == 'null' ? 'null' : user!.imgUrl;
+      imgName = user?.imgName == 'null' ? 'null' : user!.imgName;
       usernameController.text = user?.username == 'null' ? '' : user!.username;
       addressController.text = user?.address == 'null' ? '' : user!.address;
       phoneController.text = user?.phone == 'null' ? '' : user!.phone;
@@ -61,6 +63,8 @@ class _MyeditProfileState extends State<MyeditProfile> {
     final result = await FirestoreService().updateUser(
       docUser: docUser!,
       imgFile: imageFile,
+      imgUrl: imgExist,
+      imgName: imgName,
       username: usernameController.text,
       address: addressController.text,
       phone: phoneController.text,

@@ -17,12 +17,12 @@ class RouteGenerator {
   static List pagesUser = [
     const MyHomePage(),
     const MyCartPage(),
-    const MyProfilePageUser(),
+    const MyProfilePage(),
   ];
 
   static List pagesAdmin = [
     const MyDashboard(),
     const MyTransactionPage(),
-    const MyProfilePageAdmin(),
+    const MyProfilePage(),
   ];
 }

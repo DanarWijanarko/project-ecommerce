@@ -153,6 +153,7 @@ class FirestoreService {
     required String cusAddress,
     required String cusPhone,
     required List<Map<String, dynamic>> products,
+    required Timestamp timestamp,
     required String status,
     required String totalPrice,
   }) async {
@@ -168,6 +169,7 @@ class FirestoreService {
         cusAddress: cusAddress,
         cusPhone: cusPhone,
         products: products,
+        timestamp: timestamp,
         totalPrice: totalPrice,
         status: status,
       );
@@ -221,25 +223,44 @@ class FirestoreService {
     });
   }
 
+  Stream<List<Checkout>> readCheckoutData() {
+    // untuk membaca collection & snapshots() semua isi dari document
+    // dan me-return Json data dan di convert ke product object
+    return firestore.collection('checkout').snapshots().map((snapshot) {
+      // untuk membaca isi dari document 'doc.data()' yang bertipe JSON
+      // lalu dirubah menjadi Object menggunakan method 'fromJson'
+      return snapshot.docs.map((doc) => Checkout.fromJson(doc.data())).toList();
+    });
+  }
+
   Future<String?> updateUser({
     required String docUser,
     required File? imgFile,
+    required String imgUrl,
+    required String imgName,
     required String username,
     required String address,
     required String phone,
     required String birthDate,
   }) async {
     try {
-      final imgResult = await StorageServices().uploadImgToStorage(
-        'users',
-        imgFile,
-      );
+      String uploadedImgUrl = '';
+      String uploadedImgName = '';
+
+      if (imgUrl == 'null') {
+        final imgResult = await StorageServices().uploadImgToStorage(
+          'users',
+          imgFile,
+        );
+        uploadedImgUrl = imgResult['downloadUrl'];
+        uploadedImgName = imgResult['fileName'];
+      }
 
       final user = firestore.collection('users').doc(docUser);
 
       user.update({
-        'imgUrl': imgResult['downloadUrl'],
-        'imgName': imgResult['fileName'],
+        'imgUrl': imgUrl == 'null' ? uploadedImgUrl : imgUrl,
+        'imgName': imgName == 'null' ? uploadedImgName : imgName,
         'username': username,
         'address': address,
         'phone': phone,

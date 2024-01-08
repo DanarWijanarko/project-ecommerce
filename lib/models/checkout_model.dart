@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Checkout {
   String id;
   final String cusId;
@@ -5,6 +7,7 @@ class Checkout {
   final String cusAddress;
   final String cusPhone;
   final List<Map<String, dynamic>> products;
+  final Timestamp timestamp;
   final String totalPrice;
   final String status;
 
@@ -15,6 +18,7 @@ class Checkout {
     required this.cusAddress,
     required this.cusPhone,
     required this.products,
+    required this.timestamp,
     required this.totalPrice,
     required this.status,
   });
@@ -26,16 +30,19 @@ class Checkout {
         'cusAddress': cusAddress,
         'cusPhone': cusPhone,
         'products': products,
+        'timestamp': timestamp,
         'totalPrice': totalPrice,
         'status': status,
       };
 
   static Checkout fromJson(Map<String, dynamic> json) => Checkout(
+        id: json['id'],
         cusId: json['cusId'],
         cusName: json['cusName'],
         cusAddress: json['cusAddress'],
         cusPhone: json['cusPhone'],
-        products: json['products'],
+        products: List<Map<String, dynamic>>.from(json['products']),
+        timestamp: json['timestamp'],
         totalPrice: json['totalPrice'],
         status: json['status'],
       );
