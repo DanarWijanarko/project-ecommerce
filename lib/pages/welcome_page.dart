@@ -32,7 +32,7 @@ class MyWelcomePage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "GadgetApp",
+                  "SHOPYuk",
                   style: TextStyle(
                     color: black,
                     fontSize: 30,

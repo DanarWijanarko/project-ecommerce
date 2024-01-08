@@ -51,7 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 // Button Start
                 MyButtonCustom(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/order-page');
+                  },
                   width: 36,
                   height: 36,
                   bgRadius: 50,
@@ -152,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Text(
-                  "Our Gadget App",
+                  "to our SHOPYuk",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 25,

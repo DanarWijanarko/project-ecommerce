@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ecommerce/constants/color.dart';
 import 'package:project_ecommerce/components/_components.dart';
+import 'package:project_ecommerce/functions/_functions.dart';
 import 'package:project_ecommerce/functions/auth_services.dart';
 
 class MyRegisterPage extends StatefulWidget {
@@ -13,23 +14,27 @@ class MyRegisterPage extends StatefulWidget {
 }
 
 class _MyRegisterPageState extends State<MyRegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
   void handlePressedSignUpBtn() async {
-    if (passwordController.text == confirmPasswordController.text) {
-      final result = await AuthServices().signup(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      AuthServices.handleSignUpResult(result, context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password & Confirm Password do not match!'),
-        ),
-      );
+    if (_formKey.currentState!.validate()) {
+      if (passwordController.text == confirmPasswordController.text) {
+        final result = await AuthServices().signup(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        AuthServices.handleSignUpResult(result, context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Password & Confirm Password do not match!'),
+          ),
+        );
+      }
     }
   }
 
@@ -67,33 +72,52 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
 
             const SizedBox(height: 25),
 
-            // Text Field Email
-            MyAuthTextField(
-              controller: emailController,
-              labelText: "Email",
-              icon: Icons.person,
-            ),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  // Text Field Email
+                  MyAuthTextField(
+                    controller: emailController,
+                    labelText: "Email",
+                    icon: Icons.person,
+                    validator: (value) => Validator.errorMessage(
+                      value,
+                      "Please enter Email Address!",
+                    ),
+                  ),
 
-            const SizedBox(height: 21),
+                  const SizedBox(height: 15),
 
-            // Text Field Password
-            MyAuthTextField(
-              controller: passwordController,
-              labelText: "Password",
-              icon: Icons.lock,
-              obscureText: true,
-              isPassword: true,
-            ),
+                  // Text Field Password
+                  MyAuthTextField(
+                    controller: passwordController,
+                    labelText: "Password",
+                    icon: Icons.lock,
+                    obscureText: true,
+                    isPassword: true,
+                    validator: (value) => Validator.errorMessage(
+                      value,
+                      "Please enter Password!",
+                    ),
+                  ),
 
-            const SizedBox(height: 21),
+                  const SizedBox(height: 15),
 
-            // Text Field Confirm Password
-            MyAuthTextField(
-              controller: confirmPasswordController,
-              labelText: "Confirm Password",
-              icon: Icons.lock_reset,
-              obscureText: true,
-              isPassword: true,
+                  // Text Field Confirm Password
+                  MyAuthTextField(
+                    controller: confirmPasswordController,
+                    labelText: "Confirm Password",
+                    icon: Icons.lock_reset,
+                    obscureText: true,
+                    isPassword: true,
+                    validator: (value) => Validator.errorMessage(
+                      value,
+                      "Please enter Confirm Password!",
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 27),
@@ -162,6 +186,8 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                 ],
               ),
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),

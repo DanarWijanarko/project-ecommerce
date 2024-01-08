@@ -104,6 +104,7 @@ class MyAuthTextField extends StatefulWidget {
     required this.labelText,
     required this.icon,
     this.controller,
+    this.validator,
     this.obscureText = false,
     this.isPassword = false,
   });
@@ -111,6 +112,7 @@ class MyAuthTextField extends StatefulWidget {
   final String labelText;
   final IconData icon;
   final TextEditingController? controller;
+  String? Function(String?)? validator;
   final bool isPassword;
   bool obscureText;
 
@@ -121,7 +123,8 @@ class MyAuthTextField extends StatefulWidget {
 class _MyAuthTextFieldState extends State<MyAuthTextField> {
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      validator: widget.validator,
       controller: widget.controller,
       obscureText: widget.obscureText,
       decoration: InputDecoration(

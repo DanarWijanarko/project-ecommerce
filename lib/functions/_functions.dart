@@ -34,6 +34,15 @@ class Date {
   }
 }
 
+class Validator {
+  static errorMessage(value, message) {
+    if (value == null || value.isEmpty) {
+      return message;
+    }
+    return null;
+  }
+}
+
 extension StringCasingExtension on String {
   String toCapitalized() =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';

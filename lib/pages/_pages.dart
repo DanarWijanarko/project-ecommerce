@@ -7,6 +7,7 @@ export 'admin/transaction/transaction_page.dart';
 export 'bottom_navbar.dart';
 export 'user/home/home_page.dart';
 export 'user/home/product_detail.dart';
+export 'user/home/order.dart';
 export 'user/cart/cart_page.dart';
 export 'user/profile/profile_page.dart';
 export 'user/profile/edit_profile.dart';

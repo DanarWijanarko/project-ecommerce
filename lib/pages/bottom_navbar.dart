@@ -120,12 +120,12 @@ class _MyBottomNavbarAdminState extends State<MyBottomNavbarAdmin> {
                 handlePagesChanged(index);
               },
               title: [
-                "Home",
+                "Dashboard",
                 "Order",
                 "Profile",
               ][index],
               icon: [
-                Icons.home_filled,
+                Icons.dashboard,
                 Icons.upcoming,
                 Icons.person_2,
               ][index],

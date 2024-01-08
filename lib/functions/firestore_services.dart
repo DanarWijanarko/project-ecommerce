@@ -38,9 +38,13 @@ class FirestoreService {
   }
 
   Future<bool> getIsAdmin(String? docPath) async {
-    User? user = await getCurrentUserData(docPath);
+    final docRef = firestore.collection('users').doc(docPath);
+    final user = await docRef.get();
 
-    return user!.isAdmin;
+    if (user.exists) {
+      return user['isAdmin'];
+    }
+    return false;
   }
 
   Future<String?> addUserToFirestore({

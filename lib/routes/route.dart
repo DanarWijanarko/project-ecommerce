@@ -11,7 +11,20 @@ class RouteGenerator {
       '/add-product-admin': (context) => const AddProduct(),
       '/home-page': (context) => const MyBottomNavbarUser(),
       '/edit-profile': (context) => const MyeditProfile(),
+      '/order-page': (context) => const MyOrderList(),
     };
+  }
+
+  static String? routeInit(String? currentUser, isAdmin) {
+    if (currentUser == null) {
+      return '/';
+    } else {
+      if (isAdmin) {
+        return '/dashboard-admin';
+      } else {
+        return '/home-page';
+      }
+    }
   }
 
   static List pagesUser = [

@@ -13,33 +13,22 @@ void main() async {
   );
 
   String? userUid = AuthServices().getCurrentUserUID();
-  bool? isAdmin = await FirestoreService().getIsAdmin(userUid);
+  bool isAdmin = await FirestoreService().getIsAdmin(userUid);
 
-  runApp(MyApp(isAdmin: isAdmin));
+  runApp(MyApp(isAdmin: isAdmin, userUid: userUid));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, required this.isAdmin});
+  const MyApp({super.key, required this.isAdmin, required this.userUid});
 
-  final bool? isAdmin;
+  final String? userUid;
+  final bool isAdmin;
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  String? routeInit() {
-    if (AuthServices().getCurrentUserUID() == null) {
-      return '/';
-    } else {
-      if (widget.isAdmin!) {
-        return '/dashboard-admin';
-      } else {
-        return '/home-page';
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,7 +42,7 @@ class _MyAppState extends State<MyApp> {
           elevation: 0,
         ),
       ),
-      initialRoute: routeInit(),
+      initialRoute: RouteGenerator.routeInit(widget.userUid, widget.isAdmin),
       routes: RouteGenerator.generateRoute(),
     );
   }

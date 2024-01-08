@@ -38,12 +38,14 @@ class ProductView extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProductDetail(product: product),
-            ),
-          );
+          if (!isAdmin) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductDetail(product: product),
+              ),
+            );
+          }
         },
         child: Row(
           children: [
